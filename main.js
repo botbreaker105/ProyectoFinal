@@ -25,6 +25,7 @@ import { agregarComision } from "./comisiones.js";
 import { abrirReportes, switchReporteTab, guardarReporte, loadReportesHistorial, cargarEstudiantesDeCurso, switchSeguimientoSubTab, recargarSeguimientoActivo, mostrarFiliacionReporte } from "./reportes.js";
 import { initNotificacionesUI, actualizarBadgeNotificaciones } from "./notificaciones.js";
 import { importFiliacionCSV, exportFiliacionCSV } from "./filiacion.js";
+import { cargarAsesores, initAsesoresUI } from "./asesores.js";
 import {
   loadHorarioAdminLista, importHorarioCSV, exportHorarioCSV,
   agregarHorario, loadHorarioCursoRail
@@ -67,6 +68,7 @@ pintarConexion();
 initActividadUI();
 initGradebookUI();
 initNotificacionesUI();
+initAsesoresUI();
 
 $("#btn-login").addEventListener("click", async () => {
   const usuario = $("#login-email").value.trim();
@@ -98,6 +100,7 @@ $("#btn-admin-register").addEventListener("click", () => prepararRegistro(true))
 $("#btn-admin-import").addEventListener("click", () => {
   loadCursosSelect();
   loadCursosOptions("#hor-curso", "Selecciona un curso");
+  cargarAsesores();
   show("#screen-import");
 });
 $("#btn-back-import").addEventListener("click", () => show(state.currentUser ? "#screen-home" : "#screen-login"));

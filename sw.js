@@ -11,7 +11,7 @@
    Si alguna vez ves que los cambios no se reflejan para los docentes,
    sube el número de CACHE_VERSION — eso fuerza a borrar la caché vieja.
    ========================================================================= */
-const CACHE_VERSION = "edugest-v4";
+const CACHE_VERSION = "edugest-v5";
 
 const PRECACHE_URLS = [
   "./",
@@ -30,6 +30,7 @@ const PRECACHE_URLS = [
   "./notificaciones.js",
   "./dropdown.js",
   "./actividad.js",
+  "./asesores.js",
   "./registro-docente.js",
   "./firebase.js",
   "./state.js",

@@ -218,6 +218,19 @@
         <p class="hint-text" id="estudiante-status"></p>
       </div>
 
+      <p class="section-title">Asesor de curso</p>
+      <div class="card">
+        <p class="hint-text" style="margin-top:0; margin-bottom:12px;">El asesor o asesora recibe los reportes de los estudiantes de su curso y puede pedir informes a los docentes que pasan por él. Solo puedes elegir docentes que ya tengan ese curso asignado.</p>
+        <label class="field-label" for="ase-curso">Curso</label>
+        <select id="ase-curso"><option value="">Cargando cursos…</option></select>
+        <label class="field-label" for="ase-docente">Docente</label>
+        <select id="ase-docente"><option value="">Primero elige un curso</option></select>
+        <button class="btn-save" id="btn-asignar-asesor" style="margin-top:14px;">Asignar como asesor/a</button>
+        <p class="hint-text" id="ase-status"></p>
+      </div>
+      <p class="section-title">Asesores actuales</p>
+      <div class="card" id="ase-lista"><div class="empty-state">Cargando…</div></div>
+
       <p class="section-title">Nueva comisión</p>
       <div class="card">
         <label class="field-label" for="new-comision-nombre">Nombre de la comisión</label>
@@ -497,6 +510,7 @@
       </div>
       <div class="today-line" id="class-materia">MATERIA</div>
       <p class="period-title" id="class-nombre">Curso</p>
+      <div id="materia-switch" class="materia-switch" style="display:none;"></div>
     </header>
 
     <main>

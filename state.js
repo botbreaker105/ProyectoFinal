@@ -9,6 +9,7 @@ export const state = {
   currentTeacherDoc: null,
   classesToday: [],
   activeClass: null,
+  materiaActiva: "",        // materia con la que se guarda lo de la clase abierta (si el docente da varias en el curso)
   rosterState: {},          // { studentId: 'P' | 'T' | 'A' }
   materiasAsignadas: [],    // [{ materia, cursos: [...] }] — para el registro de un nuevo docente
   suppressAuthUI: false,    // evita el parpadeo de "Home" mientras se crea una cuenta nueva

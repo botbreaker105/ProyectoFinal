@@ -10,6 +10,7 @@ import { $, show, toast, toastAccion, mensajeError, guardarSeguro, initials, tie
 import { state } from "./state.js";
 import { registrarActividad } from "./actividad.js";
 import { colorParaMateria } from "./reportes.js";
+import { DIAS_SEMANA } from "./constants.js";
 
 // ---- Cambios sin guardar + avisos de "sin conexión" ----
 const MSG_PENDIENTE = "Sin conexión: guardado en tu teléfono. Se enviará cuando vuelva internet.";
@@ -38,10 +39,97 @@ window.addEventListener("beforeunload", (e) => {
 // bitácora con la materia correcta (no solo la "materia principal" del
 // curso), buscamos cuál de las materias asignadas a este docente incluye
 // el curso actual.
+function materiasDelDocenteEnCurso(cursoId) {
+  const ms = (state.currentTeacherDoc?.materias || [])
+    .filter(m => (m.cursos || []).includes(cursoId))
+    .map(m => m.materia);
+  return [...new Set(ms)];
+}
+
+// La materia con la que se guarda todo (bitácora, tarea, aviso a administración).
+// Si el docente tiene varias en este curso, manda la que eligió arriba en la clase
+// (state.materiaActiva); si solo tiene una, es esa.
 function materiaDocenteParaCurso(cursoId) {
-  const materias = state.currentTeacherDoc?.materias || [];
-  const match = materias.find(m => (m.cursos || []).includes(cursoId));
-  return match?.materia || state.activeClass?.materia || "";
+  if (state.activeClass?.id === cursoId && state.materiaActiva) return state.materiaActiva;
+  return materiasDelDocenteEnCurso(cursoId)[0] || state.activeClass?.materia || "";
+}
+
+/* ---- Selector rápido de materia (cuando el docente da varias en un mismo curso) ---- */
+const claveMateriaGuardada = (cursoId) => `edugest:materia:${state.currentUser?.uid}:${cursoId}`;
+const aMinutos = (hhmm) => { const [h, m] = String(hhmm || "0:0").split(":").map(Number); return (h || 0) * 60 + (m || 0); };
+
+// Mira el horario del curso y devuelve el bloque de hoy (de las materias del docente)
+// que está en curso o es el más cercano a la hora actual.
+async function materiaPorHorario(cursoId, candidatas) {
+  try {
+    const snap = await getDocs(collection(db, "cursos", cursoId, "horario"));
+    const ahora = new Date();
+    const hoy = DIAS_SEMANA[(ahora.getDay() + 6) % 7];
+    const min = ahora.getHours() * 60 + ahora.getMinutes();
+    let mejor = null;
+    snap.docs.map(d => d.data())
+      .filter(b => b.dia === hoy && candidatas.includes(b.materia))
+      .forEach(b => {
+        const ini = aMinutos(b.hora_inicio), fin = aMinutos(b.hora_fin);
+        const enCurso = min >= ini && min < fin;
+        const dist = enCurso ? 0 : Math.min(Math.abs(min - ini), Math.abs(min - fin));
+        if (!mejor || dist < mejor.dist) mejor = { materia: b.materia, enCurso, dist, bloque: `${b.hora_inicio}–${b.hora_fin}` };
+      });
+    return mejor;
+  } catch (err) { console.warn(err); return null; }
+}
+
+function pintarMateriaActiva(nota = "") {
+  const curso = state.activeClass;
+  if (!curso) return;
+  const ms = materiasDelDocenteEnCurso(curso.id);
+  $("#class-materia").textContent = (state.materiaActiva || curso.materia || "CLASE").toUpperCase();
+  const box = $("#materia-switch");
+  if (!box) return;
+  if (ms.length < 2) { box.style.display = "none"; box.innerHTML = ""; return; }
+  box.style.display = "block";
+  box.innerHTML = `
+    <div class="ms-title">Trabajando en:</div>
+    <div class="ms-chips" role="radiogroup" aria-label="Materia">
+      ${ms.map(m => `
+        <button type="button" class="ms-chip${m === state.materiaActiva ? " active" : ""}" role="radio" aria-checked="${m === state.materiaActiva}" data-materia="${esc(m)}">
+          <span class="ms-dot" style="background:${colorParaMateria(m)}"></span>${esc(m)}
+        </button>`).join("")}
+    </div>
+    <div class="ms-nota">${nota ? esc(nota) : "Lo que guardes ahora (bitácora, tareas) quedará en esta materia."}</div>`;
+  box.querySelectorAll(".ms-chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.materiaActiva = btn.dataset.materia;
+      try { localStorage.setItem(claveMateriaGuardada(curso.id), state.materiaActiva); } catch (e) {}
+      pintarMateriaActiva();
+      toast(`Ahora trabajas en ${state.materiaActiva}`, 1800);
+    });
+  });
+}
+
+async function elegirMateriaInicial(curso) {
+  const ms = materiasDelDocenteEnCurso(curso.id);
+  state.materiaActiva = ms[0] || curso.materia || "";
+  pintarMateriaActiva();                    // se ve de inmediato...
+  if (ms.length < 2) return;
+  let guardada = "";
+  try { guardada = localStorage.getItem(claveMateriaGuardada(curso.id)) || ""; } catch (e) {}
+  const h = await materiaPorHorario(curso.id, ms);   // ...y luego se afina con el horario
+  if (state.activeClass?.id !== curso.id) return;    // cambió de curso mientras tanto
+  let nota = "";
+  if (h?.enCurso) {
+    state.materiaActiva = h.materia;
+    nota = `Elegida según tu horario de ahora (${h.bloque}). Cámbiala si no es esta.`;
+  } else if (ms.includes(guardada)) {
+    state.materiaActiva = guardada;
+    nota = "Es la última que usaste en este curso. Verifica que sea la correcta.";
+  } else if (h) {
+    state.materiaActiva = h.materia;
+    nota = `Elegida por el bloque de hoy más cercano (${h.bloque}). Verifica que sea la correcta.`;
+  } else {
+    nota = "Tienes varias materias en este curso: elige cuál estás trabajando.";
+  }
+  pintarMateriaActiva(nota);
 }
 
 // ASISTENCIA POR DOCENTE: cada docente guarda su propia asistencia de un curso
@@ -107,6 +195,8 @@ export async function loadTeacherHome(uid) {
     const cData = cSnap.docs[0]?.data();
     if (cData) state.classesToday.push({ id: cid, ...cData });
   }
+  const asesorDe = state.classesToday.filter(c => c.asesorId === uid).map(c => c.nombre || c.id);
+  if (asesorDe.length) $("#home-role").textContent += ` · Asesor/a de ${asesorDe.join(", ")}`;
   renderRail();
   await loadActividadReciente(uid);
   renderPendientes().catch(err => console.warn(err));
@@ -464,8 +554,8 @@ function renderRail() {
     pill.className = "rail-pill";
     pill.innerHTML = `
       <span class="dot-status"></span>
-      <div class="curso">${c.nombre}</div>
-      <div class="hora">${c.hora_inicio || "--:--"} – ${c.hora_fin || "--:--"} · ${c.materia || ""}</div>
+      <div class="curso">${c.nombre}${c.asesorId === state.currentUser?.uid ? " ★" : ""}</div>
+      <div class="hora">${c.hora_inicio || "--:--"} – ${c.hora_fin || "--:--"} · ${materiasDelDocenteEnCurso(c.id).join(" / ") || c.materia || ""}</div>
     `;
     pill.addEventListener("click", () => openClass(c));
     rail.appendChild(pill);
@@ -478,7 +568,8 @@ async function openClass(curso) {
   state.serState = {};   // { studentId: "V" | "A" | "R" } — calificación del Ser (opcional)
   descartarCambios();
   salirEdicionLog();
-  $("#class-materia").textContent = curso.materia || "CLASE";
+  state.materiaActiva = "";
+  elegirMateriaInicial(curso);
   $("#class-nombre").textContent = curso.nombre;
   $("#class-hora").textContent = `${curso.hora_inicio || "--:--"} – ${curso.hora_fin || "--:--"}`;
 
