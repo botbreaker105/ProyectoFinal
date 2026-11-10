@@ -1,0 +1,1166 @@
+:root{
+    /* ---- EduGest: azul → verde del logo, superficies claras y frescas ---- */
+    --pizarra:#1470C4;       /* azul de marca — superficie oscura / encabezados */
+    --pizarra-deep:#0B7A52;  /* verde de marca — degradado (junto con --pizarra) */
+    --tiza:#EAF6F2;          /* texto claro sobre superficies oscuras */
+    --kraft:#EFF5F5;         /* fondo general de la app */
+    --card:#FFFFFF;          /* tarjetas */
+    --ink:#142433;           /* texto principal */
+    --ink-soft:#5B6E76;      /* texto secundario */
+    --linea:#DCE7E6;         /* bordes, reglas */
+    --sello-verde:#0FA968;   /* verde de marca — éxito / presente / acento */
+    --sello-verde-tenue:#DEF5EC;
+    --sello-ocre:#C98A2B;    /* ámbar — pendiente / tarde */
+    --sello-azul:#2F6FD6;    /* azul — licencia (falta justificada) */
+    --sello-rojo:#D64545;    /* rojo — alerta / ausente */
+    --radius:10px;
+    --radius-sm:6px;
+    --shadow: 0 1px 1px rgba(20,36,51,0.05), 0 10px 20px -14px rgba(20,36,51,0.35);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--kraft);
+    color:var(--ink);
+    font-family:'Work Sans',system-ui,sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+  }
+  .app{
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+    background:var(--kraft);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+  }
+  a{color:inherit;}
+  button{font-family:inherit; cursor:pointer;}
+  :focus-visible{outline:2px solid var(--sello-verde); outline-offset:2px;}
+
+  /* ---------- Screens ---------- */
+  .screen{display:none; flex-direction:column; flex:1; min-height:100vh;}
+  .screen.active{display:flex;}
+
+  /* ---------- Login ----------
+     Cubierta de una libreta escolar: verde pizarra con la textura tenue
+     de polvo de tiza en lugar de un degradado brillante genérico. */
+  #screen-login{
+    background:
+      repeating-linear-gradient(180deg, rgba(234,246,242,0.028) 0px, rgba(234,246,242,0.028) 1px, transparent 1px, transparent 26px),
+      radial-gradient(140% 100% at 15% -20%, rgba(234,246,242,0.07), transparent 55%),
+      linear-gradient(175deg, var(--pizarra) 0%, var(--pizarra-deep) 100%);
+    color:var(--tiza);
+    justify-content:space-between;
+    padding:48px 28px 32px;
+  }
+  .brand-logo{width:52px; height:auto; display:block; margin-bottom:18px;}
+  .brand-eyebrow{
+    font-family:'Courier Prime', monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#9FD3E6;
+    margin-bottom:14px;
+  }
+  .brand-eyebrow::before{content:"◆ ";}
+  .brand-title{
+    font-family:'Bitter', serif;
+    font-weight:700;
+    font-size:38px;
+    line-height:1.1;
+    margin:0 0 10px;
+    letter-spacing:-.01em;
+  }
+  .brand-sub{
+    font-size:15px;
+    color:rgba(234,246,242,0.68);
+    max-width:30ch;
+    line-height:1.55;
+  }
+  .login-card{
+    background:rgba(234,246,242,0.05);
+    border:1px solid rgba(234,246,242,0.16);
+    border-left:3px solid var(--sello-verde);
+    border-radius:var(--radius-sm);
+    padding:22px 22px 22px 26px;
+    margin-top:32px;
+    position:relative;
+  }
+  /* dos perforaciones — la libreta está "anillada" por el borde izquierdo */
+  .login-card::before, .login-card::after{
+    content:"";
+    position:absolute; left:9px; width:7px; height:7px; border-radius:50%;
+    background:var(--pizarra-deep);
+    box-shadow:inset 0 1px 2px rgba(0,0,0,0.5);
+  }
+  .login-card::before{top:22px;}
+  .login-card::after{bottom:22px;}
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;
+    font-family:'Courier Prime', monospace;
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:rgba(234,246,242,0.6);
+    margin-bottom:6px;
+  }
+  .field input{
+    width:100%;
+    padding:13px 14px;
+    border-radius:var(--radius-sm);
+    border:1px solid rgba(234,246,242,0.2);
+    background:rgba(234,246,242,0.07);
+    color:var(--tiza);
+    font-family:'Work Sans',sans-serif;
+    font-size:15px;
+  }
+  .field input::placeholder{color:rgba(234,246,242,0.32);}
+  .field input:focus{border-color:var(--sello-verde);}
+  .field .pw-field input{padding-right:42px;}
+  .btn-primary{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:var(--radius-sm);
+    background:var(--sello-verde);
+    color:var(--tiza);
+    font-weight:700;
+    font-size:14.5px;
+    letter-spacing:.01em;
+    margin-top:6px;
+    transition:transform .12s ease, background .12s ease;
+  }
+  .btn-primary:active{transform:scale(0.98);}
+  .btn-primary:hover{background:#0C7A4E;}
+  .login-msg{
+    min-height:18px;
+    font-size:12.5px;
+    color:#F2A6A6;
+    margin-top:10px;
+  }
+  .login-foot{
+    text-align:center;
+    font-size:11.5px;
+    letter-spacing:.04em;
+    color:rgba(234,246,242,0.38);
+    font-family:'Courier Prime', monospace;
+  }
+
+  /* ---------- App chrome ---------- */
+  header.top{
+    background:
+      repeating-linear-gradient(180deg, rgba(234,246,242,0.03) 0px, rgba(234,246,242,0.03) 1px, transparent 1px, transparent 24px),
+      linear-gradient(175deg, var(--pizarra), var(--pizarra-deep));
+    color:var(--tiza);
+    padding:22px 20px 20px;
+    border-radius:0 0 18px 18px;
+  }
+  .top-row{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  .brand-badge{
+    display:flex; align-items:center; gap:6px;
+    font-family:'Courier Prime', monospace; font-size:11px; font-weight:700;
+    letter-spacing:.08em; text-transform:uppercase;
+    color:rgba(234,246,242,0.75);
+    margin-bottom:12px;
+  }
+  .brand-badge img{width:18px; height:18px; display:block;}
+  .who{display:flex; align-items:center; gap:12px;}
+  .avatar{
+    width:42px; height:42px; border-radius:var(--radius-sm);
+    background:var(--sello-verde);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Bitter',serif; font-weight:700; font-size:16px;
+    color:var(--tiza);
+    border:1px solid rgba(234,246,242,0.25);
+  }
+  .who-name{font-weight:600; font-size:15px;}
+  .who-role{font-family:'Courier Prime',monospace; font-size:11.5px; letter-spacing:.03em; color:rgba(234,246,242,0.55);}
+  .icon-btn{
+    width:38px; height:38px; border-radius:var(--radius-sm);
+    background:rgba(234,246,242,0.06);
+    border:1px solid rgba(234,246,242,0.18);
+    color:var(--tiza); display:flex; align-items:center; justify-content:center;
+  }
+  .today-line{
+    margin-top:18px;
+    font-family:'Courier Prime', monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:#9FD3E6;
+  }
+  .period-title{
+    font-family:'Bitter', serif;
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:-.005em;
+    margin:4px 0 0;
+  }
+
+  /* class rail — fichas de índice, no burbujas */
+  .rail{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding:16px 20px 6px;
+    scrollbar-width:none;
+  }
+  .rail::-webkit-scrollbar{display:none;}
+  .rail-pill{
+    flex:0 0 auto;
+    min-width:132px;
+    background:var(--card);
+    border:1px solid var(--linea);
+    border-top:3px solid var(--linea);
+    border-radius:0 0 var(--radius-sm) var(--radius-sm);
+    padding:12px 14px;
+    box-shadow:var(--shadow);
+    position:relative;
+    transition:border-color .12s ease, transform .12s ease;
+  }
+  .rail-pill:active{transform:scale(0.97);}
+  .rail-pill.now{border-top-color:var(--sello-verde);}
+  .rail-pill .curso{font-family:'Bitter',serif; font-weight:700; font-size:14px; color:var(--ink);}
+  .rail-pill .hora{
+    font-family:'Courier Prime', monospace;
+    font-size:11px; color:var(--ink-soft); margin-top:4px;
+  }
+  .rail-pill .dot-status{
+    position:absolute; top:10px; right:10px;
+    width:7px; height:7px; border-radius:50%;
+    background:var(--linea);
+  }
+  .rail-pill.done .dot-status{background:var(--sello-verde);}
+  .rail-pill.pending .dot-status{background:var(--sello-ocre);}
+
+  /* ---------- Body / tabs ---------- */
+  main{flex:1; padding:18px 20px calc(100px + env(safe-area-inset-bottom));}
+  .section-title{
+    font-family:'Bitter', serif;
+    font-weight:700;
+    font-size:18px;
+    letter-spacing:-.005em;
+    margin:6px 0 14px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--linea);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:16px;
+    margin-bottom:14px;
+  }
+
+  /* attendance roster */
+  .roster-row{
+    display:flex; align-items:center; gap:12px;
+    padding:10px 4px;
+    border-bottom:1px solid var(--linea);
+  }
+  .roster-row:last-child{border-bottom:none;}
+  .roster-avatar{
+    width:34px; height:34px; border-radius:var(--radius-sm);
+    background:var(--pizarra); color:var(--tiza);
+    font-size:12.5px; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Bitter',serif;
+  }
+  .roster-name{flex:1; font-size:14.5px; font-weight:500;}
+  .status-group{display:flex; gap:6px;}
+  /* botones de asistencia = sellos de tinta: circulares, con leve giro
+     y sombra interior al marcarse, como un sello recién estampado */
+  .status-btn{
+    width:34px; height:34px; border-radius:50%;
+    border:1.5px solid var(--linea);
+    background:var(--kraft);
+    font-family:'Courier Prime', monospace;
+    font-size:12px; font-weight:700; color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .1s ease;
+  }
+  .status-btn[data-code="P"].active{
+    background:var(--sello-verde); border-color:var(--sello-verde); color:var(--tiza);
+    transform:rotate(-6deg);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,0.25), 0 2px 4px -2px rgba(20,36,51,0.4);
+  }
+  .status-btn[data-code="F"].active{
+    background:var(--sello-rojo); border-color:var(--sello-rojo); color:var(--tiza);
+    transform:rotate(5deg);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,0.25), 0 2px 4px -2px rgba(20,36,51,0.4);
+  }
+  .status-btn[data-code="A"].active{
+    background:var(--sello-ocre); border-color:var(--sello-ocre); color:var(--tiza);
+    transform:rotate(-4deg);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,0.25), 0 2px 4px -2px rgba(20,36,51,0.4);
+  }
+
+  .status-btn[data-code="L"].active{
+    background:var(--sello-azul); border-color:var(--sello-azul); color:var(--tiza);
+    transform:rotate(4deg);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,0.25), 0 2px 4px -2px rgba(20,36,51,0.4);
+  }
+
+  .attendance-summary{
+    display:flex; gap:14px; margin-bottom:14px;
+    font-family:'Courier Prime', monospace; font-size:11.5px;
+  }
+  .summary-chip{
+    display:flex; align-items:center; gap:6px;
+    background:var(--card); border:1px solid var(--linea);
+    padding:7px 11px; border-radius:999px;
+  }
+  .summary-chip i{width:7px; height:7px; border-radius:50%; display:inline-block;}
+
+  textarea{
+    width:100%;
+    border:1px solid var(--linea);
+    border-radius:var(--radius-sm);
+    padding:12px 13px;
+    font-family:'Work Sans',sans-serif;
+    font-size:14px;
+    resize:vertical;
+    min-height:96px;
+    color:var(--ink);
+    background:
+      repeating-linear-gradient(180deg, transparent 0px, transparent 25px, var(--linea) 26px),
+      var(--kraft);
+    line-height:26px;
+  }
+  textarea:focus{border-color:var(--sello-verde);}
+  label.field-label{
+    display:block;
+    font-family:'Courier Prime', monospace;
+    font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--ink-soft); margin-bottom:6px;
+  }
+  select{
+    width:100%; padding:12px 13px; border-radius:var(--radius-sm);
+    border:1px solid var(--linea); background:var(--kraft);
+    font-family:'Work Sans',sans-serif;
+    font-size:14px; color:var(--ink); margin-bottom:12px;
+  }
+
+  .btn-save{
+    width:100%; padding:14px; border:none; border-radius:var(--radius-sm);
+    background:var(--pizarra); color:var(--tiza); font-weight:700; font-size:14px;
+    letter-spacing:.01em;
+    margin-top:4px;
+  }
+  .btn-save:active{transform:scale(0.98);}
+  .btn-save.ok{background:var(--sello-verde);}
+
+  .log-entry{
+    border-bottom:1px solid var(--linea);
+    padding:12px 2px 12px 12px;
+    border-left:2px solid var(--sello-rojo);
+  }
+  .log-entry:last-child{border-bottom:none;}
+  .log-meta{
+    font-family:'Courier Prime', monospace;
+    font-size:11px; color:var(--ink-soft);
+    margin-bottom:4px;
+    letter-spacing:.02em;
+  }
+  .log-text{font-size:14px; line-height:1.55;}
+  .empty-state{
+    text-align:center; padding:30px 10px; color:var(--ink-soft); font-size:13.5px;
+    font-style:italic;
+  }
+
+  /* ---------- Registro de docentes ---------- */
+  .text-input{
+    width:100%; padding:12px 13px; border-radius:var(--radius-sm);
+    border:1px solid var(--linea); background:var(--kraft);
+    font-family:'Work Sans',sans-serif;
+    font-size:14px; color:var(--ink); margin-bottom:14px;
+  }
+  .text-input:focus{border-color:var(--sello-verde);}
+
+  /* ---------- Mostrar/ocultar contraseña (ícono, no emoji) ---------- */
+  .pw-field{position:relative;}
+  .pw-field .text-input{padding-right:42px;}
+  .pw-toggle{
+    position:absolute; top:50%; right:4px; transform:translateY(-50%);
+    width:34px; height:34px;
+    display:flex; align-items:center; justify-content:center;
+    background:none; border:none; padding:0; cursor:pointer;
+    color:var(--ink-soft);
+  }
+  .field .pw-toggle{color:rgba(234,246,242,0.55);}
+  .pw-toggle:hover{color:var(--sello-verde);}
+  .pw-toggle .icon-eye-off{display:none;}
+  .pw-toggle.showing .icon-eye{display:none;}
+  .pw-toggle.showing .icon-eye-off{display:block;}
+  .curso-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(78px, 1fr));
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .curso-chip{
+    display:flex; align-items:center; gap:7px;
+    border:1px solid var(--linea); border-radius:var(--radius-sm);
+    padding:9px 10px; font-size:13px; font-weight:600;
+    background:var(--kraft); cursor:pointer;
+    transition:border-color .12s ease, background .12s ease;
+  }
+  .curso-chip input{width:15px; height:15px; accent-color:var(--sello-verde);}
+  .curso-chip.checked{border-color:var(--sello-verde); background:var(--sello-verde-tenue);}
+  .btn-outline{
+    width:100%; padding:12px; border-radius:var(--radius-sm);
+    border:1.5px dashed var(--linea); background:transparent;
+    color:var(--pizarra); font-weight:700; font-size:13.5px;
+  }
+  .btn-outline:active{transform:scale(0.98);}
+  .hint-text{font-size:12px; color:var(--ink-soft); margin-top:9px; line-height:1.55;}
+  .materia-entry{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+    border:1px solid var(--linea); border-left:2px solid var(--sello-verde);
+    border-radius:var(--radius-sm);
+    padding:11px 13px; margin-bottom:10px;
+  }
+  .materia-entry:last-child{margin-bottom:0;}
+  .materia-entry .m-name{font-family:'Bitter',serif; font-weight:700; font-size:14px;}
+  .materia-entry .m-cursos{
+    font-family:'Courier Prime', monospace; font-size:11.5px;
+    color:var(--ink-soft); margin-top:4px;
+  }
+  .materia-entry .m-remove{
+    background:none; border:none; color:var(--sello-rojo);
+    font-family:'Courier Prime', monospace;
+    font-size:11.5px; font-weight:700; flex:0 0 auto;
+  }
+  .link-btn-light{
+    background:none; border:none; color:var(--tiza);
+    text-decoration:underline; text-underline-offset:3px;
+    font-size:13px; opacity:.82; display:block;
+    text-align:center; width:100%; margin-top:16px;
+  }
+  .link-btn-light:hover{opacity:1;}
+
+  /* ---------- Reportes ---------- */
+  .tab-pill{
+    padding:10px 16px; border-radius:var(--radius-sm);
+    border:1px solid var(--linea); background:var(--card);
+    font-weight:700; font-size:13px; color:var(--ink-soft);
+  }
+  .tab-pill.active{background:var(--pizarra); color:var(--tiza); border-color:var(--pizarra);}
+  .reporte-card{
+    border:1px solid var(--linea); border-left:2px solid var(--sello-ocre);
+    border-radius:var(--radius-sm);
+    padding:13px 14px; margin-bottom:12px;
+  }
+  .reporte-card:last-child{margin-bottom:0;}
+  .reporte-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px;}
+  .reporte-badge{
+    font-family:'Courier Prime', monospace;
+    font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:999px;
+    text-transform:uppercase; letter-spacing:.03em;
+    background:var(--sello-verde-tenue); color:var(--sello-verde); white-space:nowrap;
+  }
+  .reporte-badge.disciplinaria{background:#F6D9DC; color:var(--sello-rojo);}
+  .reporte-meta{
+    font-family:'Courier Prime', monospace; font-size:10.5px;
+    color:var(--ink-soft); margin-bottom:6px;
+  }
+  .reporte-field{font-size:13.5px; margin-top:4px; line-height:1.55;}
+  .reporte-field b{font-weight:700;}
+
+  /* ---------- Carga de tareas (gráfico de barras simple, sin librerías) ---------- */
+  .carga-row{display:flex; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid var(--linea);}
+  .carga-row:last-child{border-bottom:none;}
+  .carga-nombre{width:120px; flex-shrink:0; font-size:13px; font-weight:600; color:var(--ink);}
+  .carga-track{flex:1; height:16px; background:var(--linea); border-radius:999px; overflow:hidden;}
+  .carga-fill{height:100%; border-radius:999px; transition:width .3s ease;}
+  .carga-fill.baja{background:var(--sello-verde);}
+  .carga-fill.media{background:var(--sello-ocre);}
+  .carga-fill.alta{background:var(--sello-rojo);}
+  .carga-num{width:56px; flex-shrink:0; text-align:right; font-size:12px; color:var(--ink-soft); font-family:'Courier Prime', monospace;}
+
+  /* ---------- Horarios ---------- */
+  .horario-scroll{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  table.horario{
+    border-collapse:separate;
+    border-spacing:0;
+    width:100%;
+    min-width:520px;
+    table-layout:fixed;
+    border-top:1px solid var(--linea);
+  }
+  table.horario th, table.horario td{
+    padding:10px 8px;
+    font-size:12px;
+    text-align:center;
+    border-bottom:1px solid var(--linea);
+    border-right:1px solid var(--linea);
+    white-space:normal;
+    word-break:break-word;
+    line-height:1.3;
+    width:96px;
+    box-sizing:border-box;
+  }
+  table.horario thead th{
+    background:var(--pizarra);
+    color:var(--tiza);
+    font-family:'Courier Prime', monospace;
+    font-size:10px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    position:sticky;
+    top:0;
+    z-index:2;
+  }
+  table.horario td:first-child, table.horario th:first-child{
+    position:sticky;
+    left:0;
+    z-index:1;
+    background:var(--card);
+    font-weight:700;
+    font-family:'Courier Prime', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    text-align:left;
+    white-space:nowrap;
+    width:74px;
+    border-left:1px solid var(--linea);
+    /* separa visualmente la columna fija del contenido que se desliza
+       debajo — sin esto la unión entre "Hora" y el resto se ve pegada */
+    box-shadow:2px 0 4px -2px rgba(20,36,51,0.18);
+  }
+  table.horario thead th:first-child{background:var(--pizarra); z-index:3;}
+  table.horario tbody tr:last-child td{border-bottom:none;}
+  table.horario td:last-child, table.horario th:last-child{border-right:none;}
+  table.horario td.materia-cell{font-weight:600; color:var(--ink);}
+  table.horario td.empty-cell{color:var(--linea); font-size:16px;}
+  table.horario td.mine{
+    background:var(--sello-verde-tenue);
+    color:var(--sello-verde);
+    font-weight:700;
+    box-shadow:inset 0 0 0 1.5px var(--sello-verde);
+  }
+  table.horario td.loading, table.horario td.empty{
+    color:var(--ink-soft); font-size:13px; padding:22px 12px; border-right:none;
+  }
+
+  /* Celulares angostos (<380px): columnas un poco más chicas para que
+     entre una día más antes de tener que desplazar. */
+  @media (max-width: 380px){
+    table.horario{min-width:470px;}
+    table.horario th, table.horario td{padding:8px 5px; font-size:11px; width:82px;}
+    table.horario td:first-child, table.horario th:first-child{width:64px; font-size:10px;}
+  }
+
+  /* ---------- Bottom nav ---------- */
+  nav.bottom{
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:480px;
+    background:var(--card);
+    border-top:1px solid var(--linea);
+    display:flex;
+    padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+    box-shadow:0 -8px 20px -14px rgba(20,36,51,0.3);
+  }
+  .nav-btn{
+    flex:1; background:none; border:none; display:flex; flex-direction:column;
+    align-items:center; gap:4px; padding:6px 0; color:var(--ink-soft);
+    font-size:10.5px; font-weight:600; letter-spacing:.01em;
+  }
+  .nav-btn.active{color:var(--sello-verde);}
+  .nav-btn svg{width:20px; height:20px;}
+
+  .toast{
+    position:fixed; bottom:calc(92px + env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--pizarra); color:var(--tiza); padding:11px 18px; border-radius:var(--radius-sm);
+    font-size:13px; font-weight:500; opacity:0; pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease;
+    z-index:50;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+
+  /* =====================================================================
+     RESPONSIVE — tablet (≥700px) y escritorio (≥1080px)
+     Mobile-first arriba; aquí solo se reacomoda el layout, no se
+     duplica lógica visual.
+     ===================================================================== */
+
+  /* ---------- Tablet: app deja de ser edge-to-edge ---------- */
+  @media (min-width: 700px){
+    body{padding:28px 16px; align-items:flex-start; justify-content:center;}
+    .app{
+      max-width:640px;
+      min-height:auto;
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 24px 60px -24px rgba(20,36,51,0.45);
+    }
+    .screen{min-height:auto;}
+    #screen-login, #screen-home, #screen-class{min-height:760px;}
+    nav.bottom{max-width:640px;}
+    .horario-scroll-hint{display:none;}
+  }
+
+  /* ---------- Escritorio: layout con sidebar + login partido ---------- */
+  @media (min-width: 1080px){
+    body{padding:40px 24px;}
+    .app{
+      max-width:1120px;
+      border-radius:20px;
+      position:relative;
+    }
+    #screen-login, #screen-home, #screen-class{min-height:800px;}
+
+    /* login en dos columnas: marca a la izquierda, formulario a la derecha */
+    #screen-login{
+      flex-direction:row;
+      align-items:stretch;
+      justify-content:flex-start;
+      padding:0;
+    }
+    #screen-login > div:first-child{
+      flex:1.1;
+      padding:64px 56px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    #screen-login .brand-title{font-size:50px;}
+    #screen-login .login-card{
+      max-width:380px;
+      margin-top:40px;
+    }
+    #screen-login .login-foot{
+      flex:0.9;
+      background:rgba(0,0,0,0.14);
+      display:flex;
+      align-items:flex-end;
+      justify-content:flex-start;
+      padding:32px 40px;
+      text-align:left;
+    }
+
+    /* sidebar fija a la izquierda del panel de la app, en vez de barra inferior */
+    nav.bottom{
+      left:calc(50% - 560px);
+      top:40px;
+      bottom:40px;
+      width:104px;
+      max-width:104px;
+      height:calc(100% - 80px);
+      flex-direction:column;
+      justify-content:flex-start;
+      gap:28px;
+      padding:36px 0 20px;
+      border-top:none;
+      border-right:1px solid var(--linea);
+      border-radius:16px 0 0 16px;
+      box-shadow:none;
+    }
+    .nav-btn{flex:none;}
+
+    header.top, main, .rail{
+      margin-left:104px;
+    }
+    header.top{border-radius:0 20px 18px 0; padding:28px 40px 24px;}
+    main{padding:24px 40px 60px; max-width:760px;}
+    .rail{padding:18px 40px 8px; flex-wrap:wrap; overflow-x:visible;}
+    .rail-pill{min-width:160px;}
+
+    .section-title{font-size:20px;}
+
+    /* asistencia y bitácora/tareas lado a lado en vez de apiladas */
+    #screen-class main{
+      max-width:none;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:0 32px;
+      align-content:start;
+    }
+    .class-col-asistencia{grid-column:1;}
+    .class-col-seguimiento{grid-column:2;}
+
+    /* roster en dos columnas dentro de su card cuando hay espacio */
+    #roster-card{column-count:2; column-gap:20px;}
+    .roster-row{break-inside:avoid;}
+  }
+
+  @media (min-width: 1280px){
+    .app{max-width:1280px;}
+    nav.bottom{left:calc(50% - 640px);}
+  }
+
+/* ---------- Actividad reciente: filtros por fecha y detalle de clase ---------- */
+.actividad-filtros{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;}
+.actividad-filtros .tab-pill{padding:8px 12px; font-size:12.5px;}
+.actividad-rango{display:flex; gap:12px; margin-bottom:12px;}
+.actividad-rango > div{flex:1;}
+.reporte-card.clickable{cursor:pointer;}
+.reporte-card.clickable:hover,
+.reporte-card.clickable:active{background:var(--kraft);}
+.act-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+.act-chip{
+  font-size:11.5px; font-weight:600; padding:3px 9px; border-radius:999px;
+  background:var(--kraft); border:1px solid var(--linea); color:var(--ink-soft);
+}
+.estado-p{color:var(--sello-verde); font-weight:700; font-size:12.5px;}
+.estado-f{color:var(--sello-rojo); font-weight:700; font-size:12.5px;}
+.estado-a{color:var(--sello-ocre); font-weight:700; font-size:12.5px;}
+.estado-x{color:var(--ink-soft); font-size:12.5px;}
+.det-sub{
+  font-weight:700; font-size:12px; margin:14px 0 4px;
+  text-transform:uppercase; letter-spacing:.03em;
+}
+
+
+/* ---------- Notas por tarea (tabla tipo Excel) ---------- */
+.gb-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; border-top:1px solid var(--linea);}
+table.gb{border-collapse:separate; border-spacing:0; font-size:12.5px; min-width:100%;}
+table.gb th, table.gb td{
+  border-bottom:1px solid var(--linea); border-right:1px solid var(--linea);
+  padding:6px 6px; text-align:center; background:var(--card); min-width:84px; vertical-align:middle;
+}
+table.gb thead th{background:var(--kraft); font-weight:700; font-size:11px; vertical-align:bottom; line-height:1.25;}
+table.gb .gb-first{
+  position:sticky; left:0; z-index:2; text-align:left; min-width:138px; max-width:150px;
+  background:var(--card); box-shadow:2px 0 0 var(--linea);
+}
+table.gb thead .gb-first{background:var(--kraft); z-index:3;}
+table.gb tfoot th, table.gb tfoot td{background:var(--kraft); font-weight:700;}
+table.gb tfoot .gb-first{z-index:2;}
+table.gb td:last-child, table.gb th:last-child{border-right:none;}
+.gb-tname{font-weight:700; font-size:13px; line-height:1.3;}
+.gb-tmeta{font-family:'Courier Prime', monospace; font-size:10.5px; color:var(--ink-soft); margin-top:2px;}
+.gb-del{
+  margin-top:6px; padding:2px 0; border:none; background:none;
+  color:var(--sello-rojo); font-size:11px; font-weight:600; text-decoration:underline;
+}
+table.gb input{
+  width:100%; min-width:60px; padding:7px 2px; text-align:center;
+  font:inherit; color:var(--ink); background:transparent;
+  border:1px solid transparent; border-radius:var(--radius-sm);
+  -moz-appearance:textfield;
+}
+table.gb input::-webkit-outer-spin-button, table.gb input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+table.gb input:focus{outline:none; border-color:var(--sello-verde); background:#fff;}
+table.gb input.saving{opacity:.5;}
+table.gb input.saved{background:var(--sello-verde-tenue);}
+td.gb-msg{
+  border-right:none !important; padding:26px 14px; color:var(--ink-soft);
+  font-style:italic; text-align:center; white-space:normal; min-width:0;
+}
+
+
+/* ---------- Nota por estudiante dentro de la tarjeta de tarea ---------- */
+.nota-input{
+  width:64px; flex:0 0 auto; padding:8px 4px; text-align:center;
+  font:inherit; font-size:14px; color:var(--ink);
+  border:1px solid var(--linea); border-radius:var(--radius-sm); background:var(--kraft);
+  -moz-appearance:textfield;
+}
+.nota-input::-webkit-outer-spin-button, .nota-input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+.nota-input:focus{outline:none; border-color:var(--sello-verde); background:#fff;}
+
+/* En pantallas angostas, la nota y el botón Entregó/Pendiente pasan a una segunda línea en vez de apretarse */
+.tarea-row{flex-wrap:wrap; row-gap:8px;}
+.tarea-row .roster-name{flex:1 1 130px; min-width:0;}
+
+/* Control deslizante de nota: va en su propia línea, debajo del nombre y del botón Entregó/Pendiente */
+.tarea-nota-line{
+  flex:0 0 100%; display:flex; align-items:center; gap:12px;
+  padding-left:46px; /* alineado con el nombre (avatar 34px + espacio 12px) */
+}
+.nota-slider{flex:1; min-width:0; height:30px; margin:0; accent-color:var(--sello-verde);}
+.nota-slider.sin-nota{opacity:.4; accent-color:var(--ink-soft);}
+.nota-input.nota-fuera{border-color:var(--sello-rojo); background:#FBEAEA;}
+
+
+/* ---------- Filiación (padres / tutor) en el formulario de reportes ---------- */
+.fil-box{margin:2px 0 16px;}
+.fil-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px;}
+.fil-card{
+  padding:10px 12px; border:1px solid var(--linea); border-radius:var(--radius-sm);
+  background:var(--kraft); font-size:13px; line-height:1.4;
+}
+.fil-card.off{opacity:.4; filter:grayscale(1); background:var(--card);}
+.fil-rol{font-family:'Courier Prime', monospace; font-size:11px; font-weight:700; text-transform:uppercase; color:var(--ink-soft);}
+.fil-nombre{font-weight:700; margin-top:2px;}
+.fil-tel{margin-top:2px;}
+.fil-tel a{color:var(--sello-verde); font-weight:700; text-decoration:none;}
+.fil-nota{margin-top:4px; font-size:11px; font-style:italic; color:var(--ink-soft);}
+
+.estado-l{color:var(--sello-azul); font-weight:700; font-size:12.5px;}
+
+/* Notas por tarea: bloques por trimestre */
+table.gb tr.gb-tri th, table.gb tr.gb-tri td{
+  background:var(--pizarra); color:var(--tiza); font-weight:700; font-size:12px;
+  letter-spacing:.04em; text-transform:uppercase; text-align:left; padding:7px 10px;
+}
+table.gb tr.gb-prom th, table.gb tr.gb-prom td{background:var(--kraft); font-weight:700;}
+
+/* ---------- Barra "Registrar todo y guardar" (pantalla de clase) ---------- */
+.save-all-bar{
+  position:sticky; bottom:76px; z-index:5;
+  padding:10px 16px 12px;
+  background:linear-gradient(to top, var(--kraft) 70%, rgba(239,245,245,0));
+}
+.btn-save-all{
+  width:100%; padding:16px; border:none; border-radius:var(--radius);
+  background:linear-gradient(135deg, var(--pizarra), var(--pizarra-deep));
+  color:#fff; font-weight:700; font-size:15px; letter-spacing:.01em;
+  box-shadow:0 10px 22px -10px rgba(20,112,196,0.7);
+  cursor:pointer;
+}
+.btn-save-all:active{transform:scale(0.98);}
+.btn-save-all:disabled{opacity:.7; cursor:progress;}
+.btn-save-all.ok{background:var(--sello-verde);}
+.save-all-hint{margin:6px 0 0; text-align:center; font-size:11.5px; color:var(--ink-soft);}
+@media (min-width: 1080px){
+  .save-all-bar{bottom:0;}
+}
+
+
+/* ---------- Pantalla Notas: más clara ---------- */
+.notas-filtros-titulo{
+  margin:18px 0 6px; font-size:11px; font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-soft);
+}
+.notas-filtros{display:grid; grid-template-columns:1fr; gap:0 12px;}
+@media (min-width: 560px){
+  .notas-filtros{grid-template-columns:repeat(3, 1fr);}
+}
+.notas-filtros select{margin-bottom:0;}
+details.notas-csv{margin-top:18px;}
+details.notas-csv > summary{
+  cursor:pointer; list-style:none; padding:14px 16px; margin-bottom:12px;
+  background:var(--card); border:1px dashed var(--linea); border-radius:var(--radius);
+  font-weight:700; font-size:13.5px; color:var(--pizarra);
+}
+details.notas-csv > summary::-webkit-details-marker{display:none;}
+details.notas-csv > summary::before{content:"▸ "; }
+details.notas-csv[open] > summary::before{content:"▾ "; }
+
+
+/* ---------- Ser (semáforo) en la lista de asistencia ---------- */
+.roster-row.has-ser{flex-wrap:wrap; row-gap:8px;}
+.ser-line{flex:1 0 100%; display:flex; align-items:center; gap:6px; padding-left:46px;}
+.ser-label{
+  font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-soft); margin-right:4px;
+}
+.ser-btn{
+  padding:6px 12px; border-radius:999px; border:1.5px solid var(--linea);
+  background:var(--card); color:var(--ink-soft); font:inherit; font-size:12px; font-weight:600; cursor:pointer;
+}
+.ser-btn[data-ser="V"].active{background:var(--sello-verde); border-color:var(--sello-verde); color:#fff;}
+.ser-btn[data-ser="A"].active{background:var(--sello-ocre); border-color:var(--sello-ocre); color:#fff;}
+.ser-btn[data-ser="R"].active{background:var(--sello-rojo); border-color:var(--sello-rojo); color:#fff;}
+.ser-dot{display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; background:var(--linea);}
+.ser-dot.V{background:var(--sello-verde);}
+.ser-dot.A{background:var(--sello-ocre);}
+.ser-dot.R{background:var(--sello-rojo);}
+
+/* ---------- Etiqueta "Evaluación" ---------- */
+.tipo-eval{
+  display:inline-block; padding:1px 8px; border-radius:999px; margin-bottom:3px;
+  background:var(--sello-ocre); color:#fff; font-size:10px; font-weight:700;
+  letter-spacing:.05em; text-transform:uppercase;
+}
+
+/* ---------- Notas: estudiantes en filas, tareas en columnas ---------- */
+table.gb .gb-tcol{min-width:112px; max-width:150px; vertical-align:top; text-align:left;}
+table.gb .gb-prom-col{background:var(--kraft); font-weight:700; min-width:76px;}
+table.gb tbody .gb-first{font-weight:600; font-size:13px;}
+
+
+/* =====================================================================
+   PULIDO GENERAL — claridad e intuición
+   ===================================================================== */
+
+/* Títulos de sección con marca + subtítulo de ayuda */
+.section-title::before{
+  content:""; display:inline-block; width:4px; height:16px; border-radius:2px;
+  background:var(--sello-verde); margin-right:8px; vertical-align:-2px;
+}
+.section-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:6px 0 4px;}
+.section-head .section-title{margin:0;}
+.section-sub{margin:0 0 12px; font-size:12.5px; color:var(--ink-soft); line-height:1.5;}
+.btn-mini{
+  padding:8px 14px; border-radius:999px; border:1.5px solid var(--sello-verde);
+  background:var(--sello-verde-tenue); color:var(--pizarra-deep);
+  font:inherit; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap;
+}
+.btn-mini:active{transform:scale(0.97);}
+
+/* Lista de asistencia: cada estudiante es una mini-tarjeta de dos líneas */
+.roster-row.has-ser{padding:12px 4px;}
+.roster-row.has-ser .roster-name{min-width:0;}
+.roster-row.has-ser .status-group{flex:1 0 100%; padding-left:46px; gap:6px;}
+.roster-row.has-ser .status-btn{
+  flex:1; width:auto; height:auto; min-height:42px; padding:5px 2px; gap:1px;
+  flex-direction:column; border-radius:var(--radius-sm); font-family:inherit; cursor:pointer;
+}
+.status-btn b{font-size:13px; line-height:1;}
+.status-btn small{font-size:10px; font-weight:600; line-height:1.1;}
+.roster-row.has-ser .status-btn.active{transform:none;}
+@media (max-width: 380px){
+  .roster-row.has-ser .status-group, .ser-line{padding-left:0;}
+}
+
+/* Botones y campos: objetivos táctiles cómodos y foco visible */
+.btn-save, .btn-outline{min-height:46px;}
+button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible{
+  outline:2px solid var(--pizarra); outline-offset:2px;
+}
+
+/* Barra de navegación: la pestaña activa se nota más */
+.nav-btn.active{background:var(--sello-verde-tenue); border-radius:var(--radius-sm);}
+
+/* Estados vacíos: caja suave para que no parezca un error */
+.empty-state{
+  background:var(--kraft); border:1px dashed var(--linea); border-radius:var(--radius-sm);
+  font-style:normal;
+}
+
+
+/* =====================================================================
+   LOGIN COMPACTO + ESCUDO  (sin scroll: la pantalla se ajusta a la ventana)
+   ===================================================================== */
+.login-crest{
+  position:absolute; top:20px; right:20px; width:72px; height:auto;
+  background:#fff; border-radius:16px; padding:6px;
+  box-shadow:0 10px 24px -10px rgba(0,0,0,0.5);
+}
+#screen-login{position:relative;}
+
+/* Celular */
+@media (max-width: 699px){
+  .screen{min-height:100vh; min-height:100dvh;}
+  #screen-login{padding:24px 22px 14px;}
+  #screen-login .brand-logo{width:42px; margin-bottom:10px;}
+  #screen-login .brand-title{font-size:30px; margin-bottom:6px;}
+  #screen-login .brand-sub{font-size:14px; line-height:1.45;}
+  #screen-login .login-card{margin-top:18px; padding:16px 16px 16px 20px;}
+}
+@media (max-height: 700px){
+  #screen-login .brand-sub{display:none;}
+}
+
+/* Tablet */
+@media (min-width: 700px){
+  #screen-login{min-height:min(720px, calc(100vh - 56px)); min-height:min(720px, calc(100dvh - 56px));}
+  .login-crest{width:92px; top:26px; right:26px;}
+}
+@media (min-width: 700px) and (max-height: 700px){
+  #screen-login .brand-sub{display:none;}
+}
+
+/* Escritorio: el escudo ocupa el panel derecho */
+@media (min-width: 1080px){
+  #screen-login{min-height:min(720px, calc(100vh - 80px)); min-height:min(720px, calc(100dvh - 80px));}
+  #screen-login > div:first-child{padding:40px 56px;}
+  #screen-login .brand-title{font-size:44px;}
+  #screen-login .login-card{margin-top:26px;}
+  #screen-login .login-foot{
+    position:relative; flex-direction:column; align-items:center; justify-content:center;
+    padding:32px 40px; text-align:center;
+  }
+  .login-crest{
+    position:static; width:min(300px, 72%); max-height:78%; object-fit:contain;
+    border-radius:26px; padding:18px;
+    box-shadow:0 24px 50px -20px rgba(0,0,0,0.55);
+  }
+  .login-foot-text{position:absolute; left:40px; bottom:22px;}
+}
+
+.pend-texto{font-size:15px; line-height:1.6; margin:0 0 6px;}
+/* ---------------------------- NOTIFICACIONES ---------------------------- */
+.top-actions{display:flex; align-items:center; gap:8px;}
+.notif-btn{position:relative;}
+.notif-badge{
+  position:absolute; top:-6px; right:-6px; min-width:18px; height:18px; padding:0 5px;
+  border-radius:9px; background:var(--sello-rojo); color:#fff;
+  font-size:10.5px; font-weight:700; line-height:1;
+  display:flex; align-items:center; justify-content:center;
+  border:2px solid var(--pizarra);
+}
+.sol-card{
+  background:var(--card); border:1px solid var(--linea); border-left:4px solid var(--sello-ocre);
+  border-radius:var(--radius); padding:14px; margin-bottom:12px; box-shadow:var(--shadow);
+}
+.sol-top{display:flex; align-items:center; gap:12px;}
+.sol-nombre{font-weight:700; font-size:14.5px; color:var(--ink);}
+.sol-meta{font-size:11.5px; color:var(--ink-soft); margin-top:2px;}
+.sol-materias{margin-top:12px; display:flex; flex-direction:column; gap:10px;}
+.sol-materia-nombre{font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:6px;}
+.sol-chips{display:flex; flex-wrap:wrap; gap:6px;}
+.sol-chip{
+  padding:6px 11px; border-radius:999px; font-size:12.5px; font-weight:600;
+  border:1px solid var(--linea); background:var(--kraft); color:var(--ink-soft);
+  text-decoration:line-through; opacity:.7;
+}
+.sol-chip.on{
+  background:var(--sello-verde-tenue); border-color:var(--sello-verde); color:var(--ink);
+  text-decoration:none; opacity:1;
+}
+.sol-actions{display:flex; gap:10px; margin-top:14px;}
+.sol-actions button{flex:1; margin-top:0;}
+.sol-actions button:disabled{opacity:.6;}
+.aviso{display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--linea);}
+.aviso:last-child{border-bottom:0;}
+.aviso.nuevo{background:linear-gradient(90deg, var(--sello-verde-tenue), transparent); margin:0 -14px; padding-left:14px; padding-right:14px;}
+.aviso-ico{
+  width:30px; height:30px; flex:none; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--kraft); color:var(--ink-soft); font-weight:700;
+}
+.aviso-ico.solicitud_aprobada{background:var(--sello-verde-tenue); color:var(--sello-verde);}
+.aviso-ico.solicitud_rechazada{background:#F6D9DC; color:var(--sello-rojo);}
+.aviso-titulo{font-weight:700; font-size:13.5px; color:var(--ink);}
+.aviso-texto{font-size:12.5px; color:var(--ink-soft); margin-top:2px; line-height:1.5;}
+
+/* ------------------------- DROPDOWN PROPIO (.dd) ------------------------- */
+.dd{position:relative; margin-bottom:2px;}
+.dd-trigger{
+  width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:12px 14px; font:inherit; font-size:14px; text-align:left;
+  background:var(--card); color:var(--ink);
+  border:1px solid var(--linea); border-radius:var(--radius-sm); cursor:pointer;
+}
+.dd-trigger:active{transform:scale(.99);}
+.dd.open .dd-trigger{border-color:var(--sello-verde); box-shadow:0 0 0 3px var(--sello-verde-tenue);}
+.dd-label{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600;}
+.dd-label.placeholder{color:var(--ink-soft); font-weight:400;}
+.dd-chev{flex:none; color:var(--ink-soft); transition:transform .18s;}
+.dd.open .dd-chev{transform:rotate(180deg); color:var(--sello-verde);}
+.dd-panel{
+  position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:30;
+  background:var(--card); border:1px solid var(--linea); border-radius:var(--radius);
+  box-shadow:0 14px 30px -12px rgba(20,36,51,.4); overflow:hidden;
+}
+.dd-panel[hidden]{display:none;}
+.dd-search{
+  width:100%; padding:11px 14px; font:inherit; font-size:14px;
+  border:0; border-bottom:1px solid var(--linea); background:var(--kraft); color:var(--ink); outline:none;
+}
+.dd-list{max-height:260px; overflow-y:auto; padding:6px; -webkit-overflow-scrolling:touch;}
+.dd-item{
+  display:flex; flex-direction:column; align-items:flex-start; gap:2px; width:100%;
+  padding:10px 12px; border:0; background:transparent; border-radius:var(--radius-sm);
+  font:inherit; text-align:left; cursor:pointer; color:var(--ink);
+}
+.dd-item:hover,.dd-item.act{background:var(--kraft);}
+.dd-item.sel{background:var(--sello-verde-tenue);}
+.dd-item.sel .dd-item-label::after{content:" ✓"; color:var(--sello-verde);}
+.dd-item-label{font-size:14px; font-weight:600;}
+.dd-item-sub{font-size:11.5px; color:var(--ink-soft);}
+.dd-empty{padding:16px; text-align:center; font-size:13px; color:var(--ink-soft);}
+.aviso-evento{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;}
+.aviso-evento span{
+  font-size:11.5px; font-weight:600; padding:3px 9px; border-radius:999px;
+  background:var(--kraft); border:1px solid var(--linea); color:var(--ink); text-transform:capitalize;
+}
+.aviso-ico.evento{background:#FBEFD6; color:var(--sello-ocre);}
+.aviso-ico.reunion{background:#DCE8FA; color:var(--sello-azul);}
+.aviso-ico.citacion{background:#F6D9DC; color:var(--sello-rojo);}
+
+/* dropdowns mejorados: el <select> nativo queda oculto pero en el DOM */
+.dd-native{display:none !important;}
+.dd.disabled .dd-trigger{opacity:.55; cursor:not-allowed;}
+.dd-combo{margin-bottom:0;}
+.dd-combo .dd-panel{top:calc(100% + 6px);}
+
+/* actividad de docentes (admin) */
+.aviso.clic{cursor:pointer;}
+.aviso.clic:hover{background:var(--kraft);}
+.aviso-ico.reporte{background:#F6D9DC; color:var(--sello-rojo);}
+.aviso-ico.registro{background:#DCE8FA; color:var(--sello-azul);}
+.aviso .act-chips{margin-top:6px;}
+.det-campo{padding:8px 0; border-bottom:1px solid var(--linea);}
+.det-campo:last-child{border-bottom:0;}
+.det-campo-t{font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft);}
+.det-campo-v{font-size:14px; color:var(--ink); margin-top:3px; line-height:1.5;}
+
+/* ------------------- sin conexión, avisos y cuadros de pregunta ------------------- */
+.offline-banner{
+  position:fixed; top:0; left:0; right:0; z-index:60;
+  padding:calc(8px + env(safe-area-inset-top)) 14px 8px;
+  background:var(--sello-ocre); color:#fff; font-size:12.5px; font-weight:600; line-height:1.4; text-align:center;
+  transform:translateY(-110%); transition:transform .25s ease;
+}
+.offline-banner.show{transform:translateY(0);}
+.toast.con-accion{pointer-events:auto; display:flex; align-items:center; gap:12px; max-width:calc(100vw - 24px);}
+.toast-accion{
+  flex:none; border:0; border-radius:8px; padding:7px 12px; cursor:pointer;
+  background:var(--tiza); color:var(--pizarra); font:inherit; font-size:12.5px; font-weight:700;
+}
+.dlg-fondo{
+  position:fixed; inset:0; z-index:100; background:rgba(20,36,51,.55);
+  display:flex; align-items:center; justify-content:center; padding:20px;
+}
+.dlg{
+  width:100%; max-width:360px; background:var(--card); color:var(--ink);
+  border-radius:var(--radius); padding:20px; box-shadow:0 20px 50px rgba(20,36,51,.45);
+}
+.dlg h3{margin:0 0 6px; font-size:17px;}
+.dlg p{margin:0 0 16px; font-size:14px; color:var(--ink-soft); line-height:1.5;}
+.dlg-botones{display:flex; flex-direction:column; gap:8px;}
+.dlg-btn{
+  width:100%; padding:13px 14px; border-radius:var(--radius-sm); border:1px solid var(--linea);
+  background:var(--kraft); color:var(--ink); font:inherit; font-size:14.5px; font-weight:700; cursor:pointer;
+}
+.dlg-btn.primario{background:var(--sello-verde); border-color:var(--sello-verde); color:#fff;}
+.dlg-btn.peligro{background:#fff; border-color:var(--sello-rojo); color:var(--sello-rojo);}
+
+/* pendientes de hoy */
+.pend-card{
+  background:var(--card); border:1px solid var(--linea); border-left:4px solid var(--sello-ocre);
+  border-radius:var(--radius); padding:12px 14px; margin-bottom:14px; box-shadow:var(--shadow);
+}
+.pend-titulo{font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:6px;}
+.pend-row{display:flex; align-items:center; gap:10px; padding:8px 0; border-top:1px solid var(--linea);}
+.pend-row:first-of-type{border-top:0;}
+.pend-dot{width:9px; height:9px; border-radius:50%; background:var(--sello-ocre); flex:none;}
+.pend-texto{flex:1; min-width:0; font-size:14px; font-weight:600; color:var(--ink); line-height:1.35;}
+.pend-btn{
+  flex:none; padding:9px 13px; border-radius:var(--radius-sm); border:0; cursor:pointer;
+  background:var(--sello-verde); color:#fff; font:inherit; font-size:13px; font-weight:700;
+}
+.pend-ok{font-size:14px; font-weight:600; color:var(--sello-verde);}
+.pend-card:has(.pend-ok){border-left-color:var(--sello-verde);}
+
+/* corregir lo ya enviado */
+.previa-aviso{background:var(--sello-verde-tenue); border:1px solid var(--sello-verde); border-radius:var(--radius-sm); padding:10px 12px; color:var(--ink); margin:0 0 10px;}
+.btn-editar{margin-top:10px;}
+.link-btn{border:0; background:none; padding:0; font:inherit; font-weight:700; color:var(--sello-verde); text-decoration:underline; cursor:pointer;}
+
+/* Entendido + seguimiento de envíos */
+.btn-entendido{
+  margin-top:8px; padding:10px 16px; border-radius:var(--radius-sm); border:0; cursor:pointer;
+  background:var(--sello-verde); color:#fff; font:inherit; font-size:13.5px; font-weight:700;
+}
+.btn-entendido:disabled{opacity:.6;}
+.aviso-ok{margin-top:8px; font-size:13px; font-weight:700; color:var(--sello-verde);}
+.env-card{border-bottom:1px solid var(--linea); padding:10px 0;}
+.env-card:last-child{border-bottom:0;}
+.env-card summary{cursor:pointer; list-style:none;}
+.env-card summary::-webkit-details-marker{display:none;}
+.env-barra{height:6px; background:var(--kraft); border-radius:3px; margin:8px 0 4px; overflow:hidden;}
+.env-barra div{height:100%; background:var(--sello-verde); border-radius:3px;}
+.env-resumen{font-size:12px; font-weight:600; color:var(--ink-soft);}
+.env-lista{margin-top:8px; padding-top:6px; border-top:1px dashed var(--linea);}
+.env-fila{display:flex; justify-content:space-between; gap:10px; padding:5px 0; font-size:13px;}
+.env-estado{font-weight:700; font-size:12px;}
+.env-estado.ok{color:var(--sello-verde);}
+.env-estado.leyo{color:var(--sello-azul);}
+.env-estado.no{color:var(--sello-rojo);}

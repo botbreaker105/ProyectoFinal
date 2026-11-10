@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>EduGest · Docentes</title>
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />
+<link rel="icon" type="image/png" sizes="96x96" href="assets/icon-96.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
+<link rel="shortcut icon" href="assets/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#1470C4" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="EduGest" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="offline-banner" id="offline-banner" role="status">Sin conexión. Puedes seguir trabajando: tus cambios se guardan en el teléfono y se envían solos cuando vuelva internet.</div>
+<div class="app">
+
+  <!-- ============ LOGIN ============ -->
+  <section id="screen-login" class="screen active">
+    <div>
+      <img src="assets/icon-96.png" alt="EduGest" class="brand-logo" />
+      <div class="brand-eyebrow">Plataforma Educativa</div>
+      <h1 class="brand-title">Registro de<br>actividades</h1>
+      <p class="brand-sub">Marca asistencia y deja el registro de cada clase en menos de un minuto.</p>
+
+      <div class="login-card">
+        <div class="field">
+          <label for="login-email">Usuario</label>
+          <input id="login-email" type="text" placeholder="Ej. yuuta12" autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="login-pass">Contraseña</label>
+          <div class="pw-field">
+            <input id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password" />
+            <button type="button" class="pw-toggle" data-target="login-pass" aria-label="Mostrar contraseña">
+              <svg class="icon-eye" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+        </div>
+        <button class="btn-primary" id="btn-login">Ingresar</button>
+        <div class="login-msg" id="login-msg"></div>
+      </div>
+      <button class="link-btn-light" id="btn-goto-register" type="button">Registrar nuevo docente</button>
+    </div>
+    <div class="login-foot">
+      <img class="login-crest" src="assets/escudo.png" alt="Escudo de la U.E. Sagrado Corazón 4 — San Juan" />
+      <span class="login-foot-text">firebase · auth + firestore</span>
+    </div>
+  </section>
+
+  <!-- ============ CUENTA EN REVISIÓN / NO ACTIVA ============ -->
+  <section id="screen-pendiente" class="screen">
+    <header class="top">
+      <div class="top-row"><div class="who-role">CUENTA</div></div>
+      <div class="today-line">ESTADO DE TU SOLICITUD</div>
+      <p class="period-title" id="pend-titulo">Solicitud en revisión</p>
+    </header>
+    <main>
+      <div class="card">
+        <p class="pend-texto" id="pend-texto"></p>
+        <p class="hint-text" id="pend-detalle"></p>
+        <button class="btn-save" id="btn-pend-refrescar" type="button" style="margin-top:14px;">Revisar de nuevo</button>
+        <button class="btn-outline" id="btn-pend-logout" type="button" style="margin-top:10px;">Cerrar sesión</button>
+      </div>
+    </main>
+  </section>
+
+  <!-- ============ REGISTRO DE DOCENTE ============ -->
+  <section id="screen-register" class="screen">
+    <header class="top">
+      <div class="top-row">
+        <button class="icon-btn" id="btn-back-register" aria-label="Volver al login">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div style="flex:1;text-align:right;">
+          <div class="who-role">Nueva cuenta</div>
+        </div>
+      </div>
+      <div class="today-line">PLATAFORMA EDUCATIVA</div>
+      <p class="period-title">Registrar nuevo docente</p>
+    </header>
+
+    <main>
+      <p class="hint-text" id="reg-aprobacion-hint" style="margin:0 0 12px;">
+        Tu solicitud la revisa administración antes de activar tu cuenta. Elige abajo las materias y cursos que dictas.
+      </p>
+      <div class="card">
+        <label class="field-label" for="reg-nombre">Nombre completo</label>
+        <input class="text-input" id="reg-nombre" type="text" placeholder="Ej. Gianna Montenegro" />
+
+        <label class="field-label" for="reg-usuario">Nombre de usuario (login)</label>
+        <input class="text-input" id="reg-usuario" type="text" placeholder="Ej. gianna12" autocomplete="off" />
+
+        <label class="field-label" for="reg-pass">Contraseña</label>
+        <div class="pw-field">
+          <input class="text-input" id="reg-pass" type="password" placeholder="Cree una contraseña (mínimo 6 caracteres)" autocomplete="new-password" style="margin-bottom:0;" />
+          <button type="button" class="pw-toggle" data-target="reg-pass" aria-label="Mostrar contraseña">
+            <svg class="icon-eye" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="icon-eye-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+
+        <div id="reg-tipo-field">
+          <label class="field-label" for="reg-tipo">Tipo de usuario</label>
+          <select id="reg-tipo" style="margin-bottom:0;">
+            <option value="Docente">Docente</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </div>
+
+        <div id="reg-rol-field" style="display:none; margin-top:14px;">
+          <label class="field-label" for="reg-rol">Rol</label>
+          <input class="text-input" id="reg-rol" type="text" maxlength="40" placeholder="Ej. Director/a" autocomplete="off" style="margin-bottom:0;" />
+          <p class="hint-text" style="margin:8px 0 0;">Escribe tu cargo en la dirección. Administración revisa la solicitud antes de darte acceso (la primera cuenta de dirección de la app se activa sola).</p>
+        </div>
+      </div>
+
+      <div id="reg-materias-wrap">
+      <p class="section-title">Asignar materia y cursos</p>
+      <div class="card">
+        <label class="field-label" for="reg-materia">Materia a asignar</label>
+        <select id="reg-materia"></select>
+
+        <label class="field-label">Cursos</label>
+        <div class="curso-grid" id="reg-curso-grid"><!-- chips injected --></div>
+
+        <button class="btn-outline" id="btn-add-materia" type="button">+ Agregar materia con cursos</button>
+        <p class="hint-text" id="reg-materia-hint">Selecciona una materia y al menos un curso, luego pulsa Agregar materia.</p>
+      </div>
+
+      <p class="section-title">Materias asignadas</p>
+      <div class="card" id="reg-materias-list">
+        <div class="empty-state">Aún no hay materias asignadas.</div>
+      </div>
+
+      </div>
+
+      <button class="btn-save" id="btn-register-save">Guardar y registrar docente</button>
+      <div class="login-msg" id="reg-msg" style="color:var(--red-500);"></div>
+    </main>
+  </section>
+
+  <!-- ============ IMPORTAR / EXPORTAR CSV ============ -->
+  <section id="screen-import" class="screen">
+    <header class="top">
+      <div class="top-row">
+        <button class="icon-btn" id="btn-back-import" aria-label="Volver">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div style="flex:1;text-align:right;">
+          <div class="who-role">Datos masivos</div>
+        </div>
+      </div>
+      <div class="today-line">PLATAFORMA EDUCATIVA</div>
+      <p class="period-title">Cursos y estudiantes</p>
+    </header>
+
+    <main>
+      <p class="section-title" style="margin-top:0;">Crear todos los cursos base</p>
+      <div class="card">
+        <p class="hint-text" style="margin-top:0; margin-bottom:12px;">
+          Crea de una vez los 17 cursos del colegio: <strong>1°A–1°C</strong> hasta <strong>5°A–5°C</strong>, y <strong>6°A–6°B</strong> (sin paralelo C). Los que ya existan no se tocan ni se duplican; solo se crean los que falten.
+        </p>
+        <button class="btn-save" id="btn-crear-cursos-base" style="background:var(--green-600);">Crear los 17 cursos (1° a 6°)</button>
+        <p class="hint-text" id="crear-cursos-base-status"></p>
+      </div>
+
+      <p class="section-title">Nuevo curso</p>
+      <div class="card">
+        <label class="field-label" for="new-curso-id">Curso (código)</label>
+        <input class="text-input" id="new-curso-id" type="text" placeholder="Ej. 4B" />
+
+        <label class="field-label" for="new-curso-materia">Materia principal</label>
+        <select id="new-curso-materia"></select>
+
+        <div style="display:flex; gap:12px;">
+          <div style="flex:1;">
+            <label class="field-label" for="new-curso-hora-inicio">Hora inicio</label>
+            <input class="text-input" id="new-curso-hora-inicio" type="time" />
+          </div>
+          <div style="flex:1;">
+            <label class="field-label" for="new-curso-hora-fin">Hora fin</label>
+            <input class="text-input" id="new-curso-hora-fin" type="time" />
+          </div>
+        </div>
+        <button class="btn-save" id="btn-add-curso" style="margin-top:2px;">Guardar curso</button>
+        <p class="hint-text" id="curso-status"></p>
+      </div>
+
+      <p class="section-title">Agregar estudiante a un curso</p>
+      <div class="card">
+        <label class="field-label" for="new-est-curso">Curso</label>
+        <select id="new-est-curso"><option value="">Cargando cursos…</option></select>
+
+        <label class="field-label" for="new-est-nombre">Nombre del estudiante</label>
+        <input class="text-input" id="new-est-nombre" type="text" placeholder="Ej. Carla Mamani" />
+
+        <label class="field-label" for="new-est-grupo">Grupo / mención (opcional)</label>
+        <select id="new-est-grupo" style="margin-bottom:0;">
+          <option value="">Todo el curso (sin grupo)</option>
+          <option value="Agroecología">Agroecología</option>
+          <option value="Sistemas Informáticos">Sistemas Informáticos</option>
+        </select>
+
+        <button class="btn-save" id="btn-add-estudiante" style="margin-top:14px;">Agregar estudiante</button>
+        <p class="hint-text" id="estudiante-status"></p>
+      </div>
+
+      <p class="section-title">Nueva comisión</p>
+      <div class="card">
+        <label class="field-label" for="new-comision-nombre">Nombre de la comisión</label>
+        <input class="text-input" id="new-comision-nombre" type="text" placeholder="Ej. Comisión de Convivencia" style="margin-bottom:0;" />
+        <button class="btn-save" id="btn-add-comision" style="margin-top:14px;">Guardar comisión</button>
+        <p class="hint-text" id="comision-status">Por defecto ya existen "Comisión de Convivencia" y "Comisión Disciplinaria".</p>
+      </div>
+
+      <p class="section-title">Horario de un curso</p>
+      <div class="card">
+        <label class="field-label" for="hor-curso">Curso</label>
+        <select id="hor-curso"><option value="">Cargando cursos…</option></select>
+
+        <label class="field-label" for="hor-dia">Día</label>
+        <select id="hor-dia">
+          <option>Lunes</option><option>Martes</option><option>Miércoles</option>
+          <option>Jueves</option><option>Viernes</option>
+        </select>
+
+        <div style="display:flex; gap:12px;">
+          <div style="flex:1;">
+            <label class="field-label" for="hor-hora-inicio">Hora inicio</label>
+            <input class="text-input" id="hor-hora-inicio" type="time" />
+          </div>
+          <div style="flex:1;">
+            <label class="field-label" for="hor-hora-fin">Hora fin</label>
+            <input class="text-input" id="hor-hora-fin" type="time" />
+          </div>
+        </div>
+
+        <label class="field-label" for="hor-materia">Materia</label>
+        <select id="hor-materia" style="margin-bottom:0;"></select>
+
+        <button class="btn-save" id="btn-add-horario" style="margin-top:14px;">Agregar al horario</button>
+        <p class="hint-text" id="horario-status"></p>
+
+        <div id="hor-lista" style="margin-top:14px;"></div>
+      </div>
+
+      <p class="section-title">Importar/exportar horario por CSV</p>
+      <div class="card">
+        <p class="hint-text" style="margin-top:0; margin-bottom:12px;">
+          Para cargar el horario completo de todos los cursos de una vez: columnas <strong>curso</strong>, <strong>dia</strong>, <strong>hora_inicio</strong>, <strong>hora_fin</strong> y <strong>materia</strong> (ej. <code>1A, Lunes, 07:30, 08:10, Matemática</code>). El día debe ser exactamente Lunes/Martes/Miércoles/Jueves/Viernes y la materia, uno de los nombres del catálogo (se omiten y avisan las filas que no coincidan). Si el curso no existe todavía, se crea automáticamente. Reimportar el mismo bloque (curso+día+hora+materia) no lo duplica.
+        </p>
+        <input type="file" id="horario-csv-file" accept=".csv" style="width:100%; margin-bottom:12px;" />
+        <button class="btn-save" id="btn-import-horario-csv">Importar horario CSV</button>
+        <p class="hint-text" id="horario-import-status"></p>
+        <button class="btn-save" id="btn-export-horario-csv" style="background:var(--sello-verde); margin-top:14px;">Exportar horario CSV (todos los cursos)</button>
+        <p class="hint-text" id="horario-export-status"></p>
+      </div>
+
+      <p class="section-title">Importar desde CSV</p>
+      <div class="card">
+        <p class="hint-text" style="margin-top:0; margin-bottom:12px;">
+          El archivo debe tener columnas <strong>curso</strong> y <strong>nombre</strong> (una fila por estudiante, ej. <code>1A, Carla Mamani</code>). Si el curso no existe todavía, se crea automáticamente. Columna opcional <strong>grupo</strong> para cursos con menciones (ej. <code>1A, Carla Mamani, Agroecología</code>) — deja la celda vacía para estudiantes que cursan todas las materias del curso.
+        </p>
+        <input type="file" id="import-csv-file" accept=".csv" style="width:100%; margin-bottom:12px;" />
+        <button class="btn-save" id="btn-import-csv">Importar CSV</button>
+        <p class="hint-text" id="import-status"></p>
+      </div>
+
+      <p class="section-title">Filiación: padres y tutor (CSV)</p>
+      <div class="card">
+        <p class="hint-text" style="margin-top:0; margin-bottom:12px;">
+          Una fila por estudiante, que ya debe estar cargado. Columnas: <strong>curso</strong>, <strong>nombre</strong>, <strong>padre</strong>, <strong>padre_telefono</strong>, <strong>madre</strong>, <strong>madre_telefono</strong>, <strong>tutor</strong>, <strong>tutor_telefono</strong> y <strong>tutor_parentesco</strong> (ej. <code>1A, Carla Mamani, Juan Mamani, 70012345, Ana Quispe, 71123456, , , </code>). Si hay tutor, en los reportes se muestra solo el tutor y se apagan padre y madre; si no hay tutor, se muestran padre y madre. Lo más fácil: exporta, completa la planilla y vuelve a importarla. Reimportar reemplaza los datos de ese estudiante.
+        </p>
+        <input type="file" id="filiacion-csv-file" accept=".csv" style="width:100%; margin-bottom:12px;" />
+        <button class="btn-save" id="btn-import-filiacion-csv">Importar filiación CSV</button>
+        <p class="hint-text" id="filiacion-import-status"></p>
+        <button class="btn-save" id="btn-export-filiacion-csv" style="background:var(--sello-verde); margin-top:14px;">Exportar filiación CSV (plantilla)</button>
+        <p class="hint-text" id="filiacion-export-status"></p>
+      </div>
+
+      <p class="section-title">Exportar a CSV</p>
+      <div class="card">
+        <p class="hint-text" style="margin-top:0; margin-bottom:12px;">Descarga todos los cursos y estudiantes que ya están en Firestore, en el mismo formato.</p>
+        <button class="btn-save" id="btn-export-csv" style="background:var(--green-600);">Exportar CSV</button>
+      </div>
+    </main>
+  </section>
+
+  <!-- ============ DIAGNÓSTICO ============ -->
+  <section id="screen-diag" class="screen">
+    <header class="top">
+      <div class="top-row">
+        <button class="icon-btn" id="btn-back-diag" aria-label="Volver">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div style="flex:1;text-align:right;">
+          <div class="who-role" id="diag-project">--</div>
+        </div>
+      </div>
+      <div class="today-line">PLATAFORMA EDUCATIVA</div>
+      <p class="period-title">Diagnóstico</p>
+    </header>
+
+    <main>
+      <p class="section-title" style="margin-top:0;">Estado de Firestore</p>
+      <div class="card">
+        <p class="hint-text" style="margin-top:0; margin-bottom:12px;">
+          Hace una escritura y lectura de prueba a Firestore y borra el registro al terminar. Si esto falla, revisa tus reglas de seguridad o que el proyecto de Firebase esté bien configurado.
+        </p>
+        <button class="btn-save" id="btn-diag-test">Probar conexión</button>
+        <p class="hint-text" id="diag-result"></p>
+      </div>
+
+      <p class="section-title">Resumen de datos</p>
+      <div class="card" id="diag-counts">
+        <div class="empty-state">Pulsa "Probar conexión" para ver los conteos.</div>
+      </div>
+
+      <p class="section-title">Firebase Console</p>
+      <div class="card">
+        <p class="hint-text" style="margin-top:0; margin-bottom:12px;">
+          Si algo no cuadra desde la app, revisa los datos directamente en la consola de Firebase.
+        </p>
+        <button class="btn-save" id="btn-open-console" style="background:var(--navy-900);">Abrir Firebase Console ↗</button>
+      </div>
+    </main>
+  </section>
+
+  <!-- ============ NOTIFICACIONES ============ -->
+  <section id="screen-notificaciones" class="screen">
+    <header class="top">
+      <div class="top-row">
+        <button class="icon-btn" id="btn-back-notif" aria-label="Volver">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div style="flex:1;text-align:right;"><div class="who-role">AVISOS</div></div>
+      </div>
+      <div class="today-line">PLATAFORMA EDUCATIVA</div>
+      <p class="period-title">Notificaciones</p>
+    </header>
+    <main>
+      <div id="notif-solicitudes-wrap" style="display:none;">
+        <p class="section-title" style="margin-top:0;">Solicitudes de registro <span id="notif-sol-count"></span></p>
+        <div id="notif-solicitudes"></div>
+      </div>
+      <div id="notif-actividad-wrap" style="display:none;">
+        <p class="section-title">Actividad de docentes <span id="notif-act-count"></span></p>
+        <div class="card" id="notif-actividad"></div>
+      </div>
+
+      <div id="notif-enviar-wrap" style="display:none;">
+        <p class="section-title">Enviar notificación</p>
+        <div class="card">
+          <button class="btn-outline" id="btn-nueva-notif" type="button">+ Nueva notificación</button>
+          <div id="notif-form" style="display:none; margin-top:14px;">
+            <label class="field-label">Tipo</label>
+            <div id="dd-notif-tipo"></div>
+            <label class="field-label" style="margin-top:14px;">Enviar a</label>
+            <div id="dd-notif-dest"></div>
+            <label class="field-label" style="margin-top:14px;" for="notif-titulo">Título</label>
+            <input class="text-input" id="notif-titulo" type="text" maxlength="80" placeholder="Ej. Reunión de docentes" />
+            <label class="field-label" for="notif-texto">Mensaje</label>
+            <textarea id="notif-texto" rows="4" placeholder="Escribe el detalle…"></textarea>
+            <div id="notif-fecha-row" style="display:none; gap:12px; margin-top:12px;">
+              <div style="flex:1;">
+                <label class="field-label" for="notif-fecha">Fecha</label>
+                <input class="text-input" id="notif-fecha" type="date" style="margin-bottom:0;" />
+              </div>
+              <div style="flex:1;">
+                <label class="field-label" for="notif-hora">Hora</label>
+                <input class="text-input" id="notif-hora" type="time" style="margin-bottom:0;" />
+              </div>
+            </div>
+            <div id="notif-lugar-wrap" style="display:none; margin-top:12px;">
+              <label class="field-label" for="notif-lugar">Lugar</label>
+              <input class="text-input" id="notif-lugar" type="text" maxlength="80" placeholder="Ej. Sala de profesores" style="margin-bottom:0;" />
+            </div>
+            <button class="btn-save" id="btn-enviar-notif" type="button" style="margin-top:16px;">Enviar</button>
+            <p class="hint-text" id="notif-enviar-status"></p>
+          </div>
+        </div>
+      </div>
+
+      <div id="notif-enviadas-wrap" style="display:none;">
+        <p class="section-title">Enviadas <span id="notif-env-count"></span></p>
+        <div class="card" id="notif-enviadas"></div>
+      </div>
+
+      <p class="section-title" id="notif-avisos-title">Avisos</p>
+      <div class="card" id="notif-avisos"></div>
+    </main>
+  </section>
+
+  <!-- ============ DETALLE DE ACTIVIDAD (admin) ============ -->
+  <section id="screen-actividad-detalle" class="screen">
+    <header class="top">
+      <div class="top-row">
+        <button class="icon-btn" id="btn-back-actdet" aria-label="Volver">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div style="flex:1;text-align:right;"><div class="who-role" id="actdet-sub">--</div></div>
+      </div>
+      <div class="today-line" id="actdet-fecha">--</div>
+      <p class="period-title" id="actdet-titulo">Detalle</p>
+    </header>
+    <main id="actdet-body"></main>
+  </section>
+
+  <!-- ============ HOME / HOY ============ -->
+  <section id="screen-home" class="screen">
+    <header class="top">
+      <div class="brand-badge"><img src="assets/icon-64.png" alt="" /> EduGest</div>
+      <div class="top-row">
+        <div class="who">
+          <div class="avatar" id="home-initials">--</div>
+          <div>
+            <div class="who-name" id="home-name">Docente</div>
+            <div class="who-role" id="home-role">Cargando…</div>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="icon-btn notif-btn" id="btn-notif" title="Notificaciones" aria-label="Notificaciones">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-badge" id="notif-badge" style="display:none;">0</span>
+          </button>
+        <button class="icon-btn" id="btn-logout" title="Cerrar sesión" aria-label="Cerrar sesión">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+        </div>
+      </div>
+      <div class="today-line" id="today-line">HOY</div>
+      <p class="period-title">Tus clases de hoy</p>
+    </header>
+
+    <div class="rail" id="class-rail"><!-- pills injected --></div>
+
+    <main>
+      <div id="pendientes-card" class="pend-card" style="display:none;"></div>
+
+      <div id="admin-panel" style="display:none;">
+        <p class="section-title" style="margin-top:0;">Administración</p>
+        <div class="card" style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn-outline" id="btn-admin-register" type="button">+ Registrar nuevo docente</button>
+          <button class="btn-outline" id="btn-admin-import" type="button">Cursos, estudiantes y horarios</button>
+          <button class="btn-outline" id="btn-admin-diag" type="button">Diagnóstico de Firestore</button>
+        </div>
+      </div>
+
+      <p class="section-title">Actividad reciente</p>
+      <div class="actividad-filtros" id="actividad-filtros">
+        <button class="tab-pill active" type="button" data-rango="todo">Todo</button>
+        <button class="tab-pill" type="button" data-rango="hoy">Hoy</button>
+        <button class="tab-pill" type="button" data-rango="7">Hace 1 semana</button>
+        <button class="tab-pill" type="button" data-rango="14">Hace 2 semanas</button>
+        <button class="tab-pill" type="button" data-rango="30">Hace 1 mes</button>
+        <button class="tab-pill" type="button" data-rango="rango">Elegir fechas</button>
+      </div>
+      <div class="actividad-rango" id="actividad-rango" style="display:none;">
+        <div>
+          <label class="field-label" for="act-desde">Desde</label>
+          <input class="text-input" id="act-desde" type="date" style="margin-bottom:0;" />
+        </div>
+        <div>
+          <label class="field-label" for="act-hasta">Hasta</label>
+          <input class="text-input" id="act-hasta" type="date" style="margin-bottom:0;" />
+        </div>
+      </div>
+      <div class="card" id="recent-card">
+        <div class="empty-state">Cargando…</div>
+      </div>
+    </main>
+  </section>
+
+  <!-- ============ CLASE: asistencia + registro ============ -->
+  <section id="screen-class" class="screen">
+    <header class="top">
+      <div class="top-row">
+        <button class="icon-btn" id="btn-back" aria-label="Volver">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div style="flex:1;text-align:right;">
+          <div class="who-role" id="class-hora">--:-- – --:--</div>
+        </div>
+      </div>
+      <div class="today-line" id="class-materia">MATERIA</div>
+      <p class="period-title" id="class-nombre">Curso</p>
+    </header>
+
+    <main>
+      <div class="class-col class-col-asistencia">
+        <div class="attendance-summary" id="att-summary">
+          <span class="summary-chip"><i style="background:var(--green-500)"></i><span id="cnt-p">0</span> presente</span>
+          <span class="summary-chip"><i style="background:var(--red-500)"></i><span id="cnt-f">0</span> falta</span>
+          <span class="summary-chip"><i style="background:var(--amber-500)"></i><span id="cnt-a">0</span> atraso</span>
+          <span class="summary-chip"><i style="background:var(--sello-azul)"></i><span id="cnt-l">0</span> licencia</span>
+        </div>
+
+        <div class="section-head">
+          <p class="section-title">1. Asistencia</p>
+          <button type="button" class="btn-mini" id="btn-todos-presentes">Todos presentes</button>
+        </div>
+        <p class="section-sub">Marca cómo llegó cada estudiante. Si quieres, califica también su <strong>Ser</strong> (comportamiento) con el semáforo.</p>
+        <div class="card" id="roster-card">
+          <!-- roster rows injected -->
+        </div>
+        <button class="btn-save" id="btn-save-attendance">Guardar asistencia</button>
+
+        <p class="section-title" style="margin-top:22px;">Asistencia anterior</p>
+        <div class="card" id="asistencia-history">
+          <div class="empty-state">Sin registros todavía.</div>
+        </div>
+      </div>
+
+      <div class="class-col class-col-seguimiento">
+        <p class="section-title" style="margin-bottom:4px;">2. Registro de la clase</p>
+        <p class="section-sub">Anota qué se trabajó hoy. Queda guardado en la bitácora del curso.</p>
+        <div class="card">
+          <label class="field-label" for="log-tipo">Tipo de actividad</label>
+          <select id="log-tipo">
+            <option value="clase">Clase regular</option>
+            <option value="evaluacion">Evaluación</option>
+            <option value="proyecto">Trabajo / proyecto</option>
+            <option value="incidencia">Incidencia / Irregularidad</option>
+          </select>
+          <label class="field-label" for="log-texto">¿Qué se trabajó hoy?</label>
+          <textarea id="log-texto" placeholder="Ej. Se avanzó el capítulo 3, tarea para el viernes, dos estudiantes sin material."></textarea>
+        </div>
+        <button class="btn-save" id="btn-save-log">Guardar en registro</button>
+
+        <p class="section-title" style="margin-top:22px;">Registros anteriores</p>
+        <div class="card" id="log-history">
+          <div class="empty-state">Sin registros todavía.</div>
+        </div>
+
+        <p class="section-title" style="margin-top:22px; margin-bottom:4px;">3. Tarea o evaluación</p>
+        <p class="section-sub">Opcional. Al guardarla, aparece sola como columna en la tabla de Notas.</p>
+        <div class="card">
+          <label class="field-label" for="tarea-tipo">¿Qué vas a registrar?</label>
+          <select id="tarea-tipo">
+            <option value="tarea">Tarea</option>
+            <option value="evaluacion">Evaluación (examen)</option>
+          </select>
+          <label class="field-label" for="tarea-trimestre">Trimestre</label>
+          <select id="tarea-trimestre">
+            <option value="1">1.er trimestre</option>
+            <option value="2">2.º trimestre</option>
+            <option value="3">3.er trimestre</option>
+          </select>
+          <label class="field-label" for="tarea-nombre">Nombre</label>
+          <input class="text-input" id="tarea-nombre" type="text" placeholder="Ej. Exposición: la célula" autocomplete="off" />
+          <label class="field-label" for="tarea-fecha">Fecha de entrega</label>
+          <input class="text-input" id="tarea-fecha" type="date" />
+          <label class="field-label" for="tarea-texto">Descripción de la tarea</label>
+          <textarea id="tarea-texto" placeholder="Ej. Resolver los ejercicios 4 al 10 de la página 32." style="margin-bottom:0;"></textarea>
+        </div>
+        <button class="btn-save" id="btn-save-tarea">Asignar tarea</button>
+
+        <p class="section-title" style="margin-top:22px;">Tareas asignadas</p>
+        <div class="card" id="tareas-history">
+          <div class="empty-state">Sin tareas todavía.</div>
+        </div>
+      </div>
+    </main>
+
+    <div class="save-all-bar">
+      <button class="btn-save-all" id="btn-save-all" type="button">Registrar todo y guardar</button>
+      <p class="save-all-hint">Guarda asistencia, registro de clase y tarea de una vez. Lo que dejes vacío se omite.</p>
+    </div>
+  </section>
+
+  <!-- ============ DETALLE DE UNA CLASE (desde Actividad reciente) ============ -->
+  <section id="screen-detalle" class="screen">
+    <header class="top">
+      <div class="top-row">
+        <button class="icon-btn" id="btn-back-detalle" aria-label="Volver">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div style="flex:1;text-align:right;">
+          <div class="who-role" id="detalle-fecha">--</div>
+        </div>
+      </div>
+      <div class="today-line" id="detalle-materia">CLASE</div>
+      <p class="period-title" id="detalle-curso">Curso</p>
+    </header>
+    <main>
+      <div id="detalle-body"><div class="empty-state">Cargando…</div></div>
+    </main>
+  </section>
+
+  <!-- ============ REPORTES (COMISIONES) ============ -->
+  <section id="screen-reportes" class="screen">
+    <header class="top">
+      <div class="top-row">
+        <div class="who-role">PLATAFORMA EDUCATIVA</div>
+      </div>
+      <div class="today-line" id="reportes-today"></div>
+      <p class="period-title">Reportes</p>
+    </header>
+
+    <main>
+      <div style="display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap;">
+        <button class="tab-pill active" id="tab-crear-reporte" type="button">Crear Reporte</button>
+        <button class="tab-pill" id="tab-historial-reportes" type="button">Historial de Reportes</button>
+        <button class="tab-pill" id="tab-seguimiento" type="button" style="display:none;">Seguimiento (Admin)</button>
+      </div>
+
+      <div id="panel-crear-reporte">
+        <div class="card">
+          <label class="field-label" for="rep-comision">Comisión</label>
+          <select id="rep-comision"><option value="">Seleccione una comisión</option></select>
+
+          <label class="field-label" for="rep-estudiante">Estudiante</label>
+          <input class="text-input" id="rep-estudiante" type="text" list="rep-estudiantes-datalist" placeholder="Ej. Carla Mamani" autocomplete="off" />
+          <datalist id="rep-estudiantes-datalist"></datalist>
+
+          <label class="field-label" for="rep-curso">Curso</label>
+          <input class="text-input" id="rep-curso" type="text" list="rep-cursos-datalist" placeholder="Ej. 4to A" />
+          <datalist id="rep-cursos-datalist"></datalist>
+
+          <div id="rep-filiacion" class="fil-box" style="display:none;"></div>
+
+          <label class="field-label" for="rep-tipo">Tipo de falta o problema</label>
+          <select id="rep-tipo">
+            <option value="">Seleccione un tipo</option>
+            <option value="Leve">Falta leve</option>
+            <option value="Grave">Falta grave</option>
+            <option value="Muy grave">Falta muy grave</option>
+          </select>
+
+          <label class="field-label" for="rep-descripcion">Descripción de la incidencia</label>
+          <textarea id="rep-descripcion" placeholder="Describa el caso con detalle." style="margin-bottom:14px;"></textarea>
+
+          <label class="field-label" for="rep-accion">Acción, sanción o seguimiento propuesto</label>
+          <textarea id="rep-accion" placeholder="Indique la acción o propuesta de mejora."></textarea>
+
+          <button class="btn-save" id="btn-guardar-reporte" style="margin-top:14px;">Guardar reporte</button>
+          <p class="hint-text" id="rep-status"></p>
+        </div>
+      </div>
+
+      <div id="panel-historial-reportes" style="display:none;">
+        <div class="card" style="margin-bottom:14px;">
+          <label class="field-label" for="rep-filtro-curso">Filtrar por curso</label>
+          <select id="rep-filtro-curso" style="margin-bottom:12px;"><option value="">Todos los cursos</option></select>
+
+          <label class="field-label" for="rep-filtro-comision">Filtrar por comisión</label>
+          <select id="rep-filtro-comision" style="margin-bottom:0;"><option value="">Todas las comisiones</option></select>
+        </div>
+
+        <div class="card" id="reportes-list">
+          <div class="empty-state">Cargando reportes…</div>
+        </div>
+      </div>
+
+      <div id="panel-seguimiento" style="display:none;">
+        <p class="hint-text" style="margin-top:0; margin-bottom:14px;">
+          Registros y tareas de todos los cursos y docentes, cada tarjeta coloreada según la materia. Los reportes de comisiones ya tienen su propio historial completo en la pestaña "Historial de Reportes".
+        </p>
+        <div class="card" style="margin-bottom:14px;">
+          <label class="field-label" for="seg-filtro-curso">Filtrar por curso</label>
+          <select id="seg-filtro-curso" style="margin-bottom:12px;"><option value="">Todos los cursos</option></select>
+
+          <label class="field-label" for="seg-filtro-materia">Filtrar por materia</label>
+          <select id="seg-filtro-materia" style="margin-bottom:0;"><option value="">Todas las materias</option></select>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
+          <button class="tab-pill active" id="seg-tab-bitacoras" type="button">Registros</button>
+          <button class="tab-pill" id="seg-tab-tareas" type="button">Tareas</button>
+          <button class="tab-pill" id="seg-tab-asistencia" type="button">Asistencia</button>
+        </div>
+
+        <div id="seguimiento-bitacoras-list">
+          <div class="empty-state">Cargando registros…</div>
+        </div>
+        <div id="seguimiento-tareas-list" style="display:none;">
+          <div class="empty-state">Cargando tareas…</div>
+        </div>
+        <div id="seguimiento-asistencia-list" style="display:none;">
+          <div class="empty-state">Cargando asistencia…</div>
+        </div>
+      </div>
+    </main>
+  </section>
+
+  <!-- ============ NOTAS ============ -->
+  <section id="screen-notas" class="screen">
+    <header class="top">
+      <div class="top-row">
+        <div class="who-role">PLATAFORMA EDUCATIVA</div>
+      </div>
+      <div class="today-line">NOTAS POR CURSO</div>
+      <p class="period-title">Notas</p>
+    </header>
+
+    <main>
+      <!-- PASO 1: elegir curso -->
+      <div class="card notas-elegir">
+        <label class="field-label" for="notas-curso">1. ¿De qué curso quieres ver las notas?</label>
+        <select id="notas-curso"><option value="">Cargando cursos…</option></select>
+        <p class="hint-text" id="notas-permiso-hint" style="margin:8px 0 0;"></p>
+
+        <p class="notas-filtros-titulo">Filtros (opcional)</p>
+        <div class="notas-filtros">
+          <div>
+            <label class="field-label" for="notas-materia-filtro">Materia</label>
+            <select id="notas-materia-filtro"><option value="">Todas</option></select>
+          </div>
+          <div>
+            <label class="field-label" for="notas-trimestre-filtro">Trimestre</label>
+            <select id="notas-trimestre-filtro"><option value="">Todos</option></select>
+          </div>
+          <div>
+            <label class="field-label" for="notas-grupo-filtro">Grupo / mención</label>
+            <select id="notas-grupo-filtro"><option value="">Todos</option></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASO 2: notas por tarea (las tareas se crean desde la clase) -->
+      <p class="section-title" id="gb-titulo" style="display:none;">2. Notas por tarea</p>
+      <div class="card" id="gb-card" style="display:none; padding:0; overflow:hidden;">
+        <div style="padding:14px 14px 12px;">
+          <p class="hint-text" id="gb-hint" style="margin:0;"></p>
+        </div>
+        <div class="gb-scroll"><table class="gb" id="gb-tabla"></table></div>
+      </div>
+
+      <p class="section-title" id="notas-tabla-titulo" style="display:none;">Notas importadas por CSV</p>
+      <div class="card" id="notas-tabla-card" style="padding:0; overflow:hidden; display:none;">
+        <div class="horario-scroll">
+          <table class="horario" id="notas-tabla">
+            <thead><tr><th>Estudiante</th><th>Grupo</th><th>Materia</th><th>Trim.</th><th>Nota</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Resumen de carga de tareas -->
+      <p class="section-title" id="carga-tareas-titulo">Resumen: tareas pendientes por curso</p>
+      <p class="hint-text" id="carga-tareas-hint" style="margin-top:0; margin-bottom:10px;">
+        Cuántas tareas le quedan en promedio a cada estudiante, sumando todas las materias del curso.
+      </p>
+      <div class="card" id="carga-tareas-card">
+        <div class="empty-state">Cargando…</div>
+      </div>
+
+      <!-- Herramientas CSV, plegadas para no estorbar -->
+      <details class="notas-csv">
+        <summary>Importar o exportar notas con CSV</summary>
+
+        <div class="card" id="notas-import-card">
+          <p class="section-title" style="margin-top:0;">Importar notas</p>
+          <p class="hint-text" style="margin-top:0; margin-bottom:12px;">
+            El archivo debe tener las columnas <strong>curso, materia, trimestre, nombre, nota</strong>. Ejemplo: <code>1A, Matemática, 1, Carla Mamani, 85</code>. Solo se importan cursos que tengas asignados. Si repites estudiante + materia + trimestre, la nota se actualiza, no se duplica.
+          </p>
+          <input type="file" id="notas-csv-file" accept=".csv" style="width:100%; margin-bottom:12px;" />
+          <button class="btn-save" id="btn-import-notas-csv">Importar notas</button>
+          <p class="hint-text" id="notas-import-status"></p>
+        </div>
+
+        <div class="card">
+          <p class="section-title" style="margin-top:0;">Exportar notas</p>
+          <p class="hint-text" style="margin-top:0; margin-bottom:12px;">Descarga las notas del curso, materia y trimestre que elegiste arriba. Sin curso elegido, descarga todos los que puedas ver.</p>
+          <button class="btn-save" id="btn-export-notas-csv" style="background:var(--green-600);">Exportar notas</button>
+          <p class="hint-text" id="notas-export-status"></p>
+        </div>
+      </details>
+    </main>
+  </section>
+
+  <!-- ============ HORARIOS ============ -->
+  <section id="screen-horarios" class="screen">
+    <header class="top">
+      <div class="top-row">
+        <div class="who-role">PLATAFORMA EDUCATIVA</div>
+      </div>
+      <div class="today-line">HORARIOS DINÁMICOS</div>
+      <p class="period-title" id="horario-curso-titulo">Horarios</p>
+    </header>
+
+    <div class="rail" id="horario-curso-rail"><!-- pills de curso injected --></div>
+
+    <main>
+      <div class="card" style="display:flex; align-items:center; gap:8px; padding:11px 14px;">
+        <span style="width:12px; height:12px; border-radius:4px; background:var(--green-100); border:1px solid var(--green-500); flex:0 0 auto;"></span>
+        <span class="hint-text" style="margin:0;">Resaltado = tus horas de clase en este curso</span>
+      </div>
+
+      <div class="card" style="padding:0; overflow:hidden;">
+        <p class="hint-text horario-scroll-hint" style="margin:10px 14px 0;">Desliza hacia la derecha para ver el resto de la semana →</p>
+        <div class="horario-scroll">
+          <table class="horario" id="horario-tabla">
+            <tbody><tr><td class="empty">Selecciona un curso arriba.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </section>
+
+  <!-- ============ BOTTOM NAV ============ -->
+  <nav class="bottom" id="bottom-nav" style="display:none;">
+    <button class="nav-btn active" data-go="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      Inicio
+    </button>
+    <button class="nav-btn" data-go="reportes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+      Reportes
+    </button>
+    <button class="nav-btn" data-go="horarios">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+      Horarios
+    </button>
+    <button class="nav-btn" data-go="notas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13l1.5 1.5L14 11"/></svg>
+      Notas
+    </button>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script type="module" src="main.js"></script>
+<script>
+  // Registra el service worker para habilitar "Instalar app" / "Agregar a
+  // pantalla de inicio". Si falla (navegador viejo, http sin https, etc.),
+  // la app sigue funcionando normal, solo sin esa opción de instalar.
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch((err) => {
+        console.warn("No se pudo registrar el service worker:", err);
+      });
+    });
+  }
+</script>
+</body>
+</html>
