@@ -26,6 +26,7 @@ import { abrirReportes, switchReporteTab, guardarReporte, loadReportesHistorial,
 import { initNotificacionesUI, actualizarBadgeNotificaciones } from "./notificaciones.js";
 import { importFiliacionCSV, exportFiliacionCSV } from "./filiacion.js";
 import { cargarAsesores, initAsesoresUI } from "./asesores.js";
+import { initInformesUI } from "./informes.js";
 import {
   loadHorarioAdminLista, importHorarioCSV, exportHorarioCSV,
   agregarHorario, loadHorarioCursoRail
@@ -69,6 +70,7 @@ initActividadUI();
 initGradebookUI();
 initNotificacionesUI();
 initAsesoresUI();
+initInformesUI();
 
 $("#btn-login").addEventListener("click", async () => {
   const usuario = $("#login-email").value.trim();
@@ -138,6 +140,10 @@ $("#btn-back").addEventListener("click", async () => {
   show("#screen-home");
   renderPendientes().catch(() => {});
 });
+$("#btn-back-informe").addEventListener("click", () => {
+  show("#screen-home");
+  renderPendientes().catch(() => {});
+});
 $("#btn-save-attendance").addEventListener("click", saveAttendance);
 $("#btn-save-log").addEventListener("click", saveLog);
 $("#btn-save-tarea").addEventListener("click", saveTarea);
@@ -146,6 +152,7 @@ $("#btn-save-all").addEventListener("click", saveTodo);
 $("#tab-crear-reporte").addEventListener("click", () => switchReporteTab("crear"));
 $("#tab-historial-reportes").addEventListener("click", () => switchReporteTab("historial"));
 $("#tab-seguimiento").addEventListener("click", () => switchReporteTab("seguimiento"));
+$("#tab-asesoria").addEventListener("click", () => switchReporteTab("asesoria"));
 $("#btn-guardar-reporte").addEventListener("click", guardarReporte);
 $("#rep-curso").addEventListener("input", (e) => cargarEstudiantesDeCurso(e.target.value));
 $("#rep-estudiante").addEventListener("input", mostrarFiliacionReporte);

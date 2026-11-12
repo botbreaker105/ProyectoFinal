@@ -629,6 +629,7 @@
         <button class="tab-pill active" id="tab-crear-reporte" type="button">Crear Reporte</button>
         <button class="tab-pill" id="tab-historial-reportes" type="button">Historial de Reportes</button>
         <button class="tab-pill" id="tab-seguimiento" type="button" style="display:none;">Seguimiento (Admin)</button>
+        <button class="tab-pill" id="tab-asesoria" type="button" style="display:none;">Asesoría</button>
       </div>
 
       <div id="panel-crear-reporte">
@@ -677,6 +678,22 @@
         <div class="card" id="reportes-list">
           <div class="empty-state">Cargando reportes…</div>
         </div>
+      </div>
+
+      <div id="panel-asesoria" style="display:none;">
+        <div class="card">
+          <p class="hint-text" style="margin-top:0; margin-bottom:12px;">Pide un informe rápido a todos los docentes que pasan por tu curso. Cada uno recibirá un aviso y lo verá en sus «Pendientes».</p>
+          <label class="field-label" for="inf-curso">Curso</label>
+          <select id="inf-curso"></select>
+          <label class="field-label" for="inf-mensaje">Qué necesitas (opcional)</label>
+          <textarea id="inf-mensaje" rows="3" placeholder="Ej.: faltas, tareas no presentadas y notas bajas del trimestre"></textarea>
+          <label class="field-label" for="inf-fecha">Fecha límite (opcional)</label>
+          <input type="date" id="inf-fecha" />
+          <button class="btn-save" id="btn-pedir-informe" type="button" style="margin-top:14px;">Pedir informe a los docentes</button>
+          <p class="hint-text" id="inf-status"></p>
+        </div>
+        <p class="section-title">Informes que pedí</p>
+        <div id="inf-lista"><div class="empty-state">Cargando…</div></div>
       </div>
 
       <div id="panel-seguimiento" style="display:none;">

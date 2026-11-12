@@ -11,6 +11,7 @@ import { state } from "./state.js";
 import { registrarActividad } from "./actividad.js";
 import { colorParaMateria } from "./reportes.js";
 import { DIAS_SEMANA } from "./constants.js";
+import { informesPendientesDe, abrirInforme } from "./informes.js";
 
 // ---- Cambios sin guardar + avisos de "sin conexión" ----
 const MSG_PENDIENTE = "Sin conexión: guardado en tu teléfono. Se enviará cuando vuelva internet.";
@@ -234,6 +235,15 @@ export async function renderPendientes() {
         items.push({ texto: `${a.titulo} — ${cuando}${a.hora ? " a las " + a.hora : ""}`, boton: "Ver", accion: () => $("#btn-notif").click() });
       });
   } catch (err) { /* sin avisos: no pasa nada */ }
+  try {
+    const pedidos = await informesPendientesDe(state.currentTeacherDoc.cursos || []);
+    pedidos.forEach(p => items.push({
+      texto: `Informe pedido por ${p.asesorNombre || "el asesor"} para ${p.cursoNombre || p.cursoId}` +
+        (p.fechaLimite ? ` — antes del ${new Date(p.fechaLimite + "T00:00:00").toLocaleDateString("es-BO", { day: "numeric", month: "long" })}` : ""),
+      boton: "Llenar",
+      accion: () => abrirInforme(p)
+    }));
+  } catch (err) { /* sin pedidos o sin permiso: no pasa nada */ }
 
   if (!items.length) {
     if (state.classesToday.length) {

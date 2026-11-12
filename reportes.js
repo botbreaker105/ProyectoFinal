@@ -8,6 +8,8 @@ import { registrarActividad } from "./actividad.js";
 import { getComisiones, comisionBadgeClass, comisionActual } from "./comisiones.js";
 import { MATERIAS_DISPONIBLES } from "./constants.js";
 import { esc, norm, renderFiliacionHTML, snapshotContactos } from "./filiacion.js";
+import { crearAviso } from "./notificaciones.js";
+import { prepararAsesoria, cargarAsesoria } from "./informes.js";
 
 function esAdminActual() {
   return state.currentTeacherDoc?.tipo === "Admin";
@@ -30,6 +32,7 @@ export function colorParaMateria(materia) {
 // Mapa nombre-de-curso -> id de documento, para poder ubicar el curso
 // escrito en #rep-curso y cargar sus estudiantes. Se llena en abrirReportes().
 let cursosNombreAId = {};
+let cursosAsesor = {};              // nombre de curso -> { id, asesorId, asesorNombre }
 let estudiantesCursoActual = null; // evita recargar si ya se cargó este curso
 let datosEstudiantes = new Map();   // nombre normalizado -> { nombre, filiacion } del curso cargado
 let seguimientoSubTabActual = "bitacoras";
@@ -48,6 +51,8 @@ export async function abrirReportes() {
     const cursosSnap = await getDocs(collection(db, "cursos"));
     cursosNombreAId = {};
     cursosSnap.docs.forEach(d => { cursosNombreAId[d.data().nombre || d.id] = d.id; });
+    cursosAsesor = {};
+    cursosSnap.docs.forEach(d => { const c = d.data(); cursosAsesor[c.nombre || d.id] = { id: d.id, asesorId: c.asesorId || "", asesorNombre: c.asesorNombre || "" }; });
     const nombres = Object.keys(cursosNombreAId);
     $("#rep-cursos-datalist").innerHTML = nombres.map(n => `<option value="${n}"></option>`).join("");
     $("#rep-filtro-curso").innerHTML = `<option value="">Todos los cursos</option>` +
@@ -71,6 +76,7 @@ export async function abrirReportes() {
   datosEstudiantes = new Map();
   $("#rep-estudiantes-datalist").innerHTML = "";
   mostrarFiliacionReporte();
+  prepararAsesoria();
 }
 
 // Muestra (o esconde) los contactos de padres/tutor del estudiante escrito en el reporte.
@@ -117,10 +123,13 @@ export function switchReporteTab(tab) {
   $("#tab-crear-reporte").classList.toggle("active", tab === "crear");
   $("#tab-historial-reportes").classList.toggle("active", tab === "historial");
   $("#tab-seguimiento").classList.toggle("active", tab === "seguimiento");
+  $("#tab-asesoria").classList.toggle("active", tab === "asesoria");
+  $("#panel-asesoria").style.display = tab === "asesoria" ? "block" : "none";
   $("#panel-crear-reporte").style.display = tab === "crear" ? "block" : "none";
   $("#panel-historial-reportes").style.display = tab === "historial" ? "block" : "none";
   $("#panel-seguimiento").style.display = tab === "seguimiento" ? "block" : "none";
   if (tab === "historial") loadReportesHistorial();
+  if (tab === "asesoria") cargarAsesoria();
   if (tab === "seguimiento" && esAdminActual()) switchSeguimientoSubTab(seguimientoSubTabActual);
 }
 
@@ -159,11 +168,15 @@ export async function guardarReporte() {
   }
 
   const contactos = snapshotContactos(datosEstudiantes.get(norm(estudiante))?.filiacion);
+  const infoCurso = cursosAsesor[curso] || {};
+  const asesorId = infoCurso.asesorId || "";
   try {
     const refReporte = doc(collection(db, "reportes"));
     const estadoRep = await guardarSeguro(setDoc(refReporte, {
       comision, estudiante, curso, tipo, descripcion, accion,
       ...(contactos.length ? { contactos } : {}),
+      ...(infoCurso.id ? { cursoId: infoCurso.id } : {}),
+      ...(asesorId ? { asesorId, asesorNombre: infoCurso.asesorNombre } : {}),
       docenteId: state.currentUser.uid,
       docenteNombre: state.currentTeacherDoc?.nombre || "",
       creado: serverTimestamp()
@@ -174,6 +187,11 @@ export async function guardarReporte() {
       comision, estudiante, curso, tipoReporte: tipo, descripcion, accion,
       ...(contactos.length ? { contactos } : {})
     });
+    // Aviso para el asesor/a del curso (si es otra persona).
+    if (asesorId && asesorId !== state.currentUser.uid) {
+      crearAviso(asesorId, "reporte_asesor", `Reporte de ${estudiante} (${curso})`,
+        `${state.currentTeacherDoc?.nombre || "Un docente"} creó un reporte (${comisionActual(comision)}). Búscalo en Reportes → Historial.`);
+    }
     status.style.color = "var(--green-600)";
     status.textContent = estadoRep === "pendiente" ? "Sin conexión: guardado en tu teléfono; se enviará cuando vuelva internet." : "Reporte guardado.";
     toast(estadoRep === "pendiente" ? "Sin conexión: se enviará cuando haya internet" : "Reporte guardado", estadoRep === "pendiente" ? 5000 : 2200);
@@ -404,12 +422,16 @@ export async function loadReportesHistorial() {
 
   const esAdmin = esAdminActual();
   try {
-    const q = esAdmin
-      ? query(collection(db, "reportes"), limit(200))
-      : query(collection(db, "reportes"), where("docenteId", "==", state.currentUser.uid), limit(200));
-    const snap = await getDocs(q);
-
-    let reportes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const uid = state.currentUser.uid;
+    // Un docente ve los suyos y, si es asesor/a de un curso, también los de los estudiantes de ese curso.
+    const consultas = esAdmin
+      ? [getDocs(query(collection(db, "reportes"), limit(200)))]
+      : [getDocs(query(collection(db, "reportes"), where("docenteId", "==", uid), limit(200))),
+         getDocs(query(collection(db, "reportes"), where("asesorId", "==", uid), limit(200))).catch(() => null)];
+    const snaps = (await Promise.all(consultas)).filter(Boolean);
+    const porId = new Map();
+    snaps.forEach(s => s.docs.forEach(d => porId.set(d.id, { id: d.id, ...d.data() })));
+    let reportes = [...porId.values()];
     reportes.sort((a, b) => (b.creado?.toMillis?.() || 0) - (a.creado?.toMillis?.() || 0));
 
     if (state.reportesFiltro.curso) reportes = reportes.filter(r => r.curso === state.reportesFiltro.curso);
@@ -432,7 +454,7 @@ export async function loadReportesHistorial() {
           </div>
           <span class="${comisionBadgeClass(r.comision)}">${comisionActual(r.comision)}</span>
         </div>
-        <div class="reporte-meta">${when}${esAdmin && r.docenteNombre ? " · " + r.docenteNombre : ""}</div>
+        <div class="reporte-meta">${when}${(esAdmin || r.docenteId !== state.currentUser.uid) && r.docenteNombre ? " · Reportó: " + esc(r.docenteNombre) : ""}</div>
         ${r.tipo ? `<div class="reporte-field"><b>Tipo:</b> ${r.tipo}</div>` : ""}
         <div class="reporte-field"><b>Descripción:</b> ${r.descripcion}</div>
         ${r.accion ? `<div class="reporte-field"><b>Acción propuesta:</b> ${r.accion}</div>` : ""}

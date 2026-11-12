@@ -241,7 +241,7 @@ async function refrescarTrasResolver() {
 /* --------------------------------- AVISOS -------------------------------- */
 const ICONO_AVISO = {
   solicitud_aprobada: "✓", solicitud_rechazada: "✕",
-  aviso: "i", evento: "★", reunion: "◷", citacion: "✉"
+  aviso: "i", evento: "★", reunion: "◷", citacion: "✉", reporte_asesor: "!", informe: "▤"
 };
 const fmtFechaAviso = (iso) => iso
   ? new Date(iso + "T00:00:00").toLocaleDateString("es-BO", { weekday: "long", day: "numeric", month: "long" })
