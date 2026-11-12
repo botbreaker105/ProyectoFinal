@@ -153,8 +153,8 @@ export async function informesPendientesDe(cursos) {
 
 export function initInformesUI() {
   mejorarSelect($("#inf-curso"));
-  $("#btn-pedir-informe").addEventListener("click", pedirInforme);
-  $("#btn-enviar-informe").addEventListener("click", guardarInforme);
+  $("#btn-pedir-informe")?.addEventListener("click", pedirInforme);
+  $("#btn-enviar-informe")?.addEventListener("click", guardarInforme);
 }
 
 /* =========================================================================

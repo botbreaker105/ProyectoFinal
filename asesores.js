@@ -105,6 +105,6 @@ export async function cargarAsesores() {
 export function initAsesoresUI() {
   mejorarSelect($("#ase-curso"));
   mejorarSelect($("#ase-docente"));
-  $("#ase-curso").addEventListener("change", llenarDocentes);
-  $("#btn-asignar-asesor").addEventListener("click", asignarAsesor);
+  $("#ase-curso")?.addEventListener("change", llenarDocentes);
+  $("#btn-asignar-asesor")?.addEventListener("click", asignarAsesor);
 }

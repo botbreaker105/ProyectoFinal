@@ -1,0 +1,48 @@
+LICENCIA DE USO NO COMERCIAL — EduGest
+
+Copyright (c) 2026 Yuuta Shoji. Todos los derechos reservados, salvo los permisos
+que se otorgan expresamente en esta licencia.
+
+1. PROPÓSITO
+EduGest fue desarrollado como trabajo final de defensa de grado del Técnico Medio en
+Sistemas Informáticos de la Unidad Educativa Sagrado Corazón "4" E.P.D.B (San Juan,
+Santa Cruz, Bolivia, 2026), sin fines de lucro.
+
+2. PERMISOS
+Se concede a cualquier persona, sin costo, el permiso de usar, ejecutar, copiar,
+estudiar y modificar este software y sus archivos, y de compartir copias o versiones
+modificadas, siempre y cuando lo haga SIN FINES DE LUCRO (por ejemplo, uso educativo,
+académico, institucional o personal).
+
+3. CONDICIONES
+a) Se debe mantener, en todas las copias y versiones modificadas, el aviso de derechos
+   de autor y esta licencia.
+b) Las versiones modificadas deben indicar que fueron modificadas y no pueden presentarse
+   como la obra original del autor.
+c) Está prohibido vender el software, cobrar por su uso o por su distribución, o
+   incluirlo en un producto o servicio comercial. Cualquier uso con fines de lucro
+   requiere la autorización previa y por escrito del titular de los derechos.
+
+4. DERECHOS DEL AUTOR
+Esta licencia no transfiere la propiedad del código. El código fuente y su autoría
+pertenecen al titular indicado arriba, quien conserva todos los derechos que no se
+otorgan de forma expresa en este documento.
+
+5. DATOS Y CONFIGURACIÓN
+Este repositorio no incluye datos reales de estudiantes, docentes ni familias. Quien use
+el software es responsable de configurar su propio proyecto de Firebase, de proteger sus
+credenciales y reglas de seguridad, y de cumplir las normas de protección de datos
+personales que le correspondan, en especial las de menores de edad.
+
+6. COMPONENTES DE TERCEROS
+Este proyecto usa bibliotecas de terceros (por ejemplo, Firebase y PapaParse) que
+mantienen sus propias licencias; esta licencia no las modifica.
+
+7. SIN GARANTÍA
+EL SOFTWARE SE ENTREGA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA. EL
+AUTOR NO SERÁ RESPONSABLE POR DAÑOS, PÉRDIDA DE DATOS U OTROS PERJUICIOS DERIVADOS DEL
+USO DEL SOFTWARE.
+
+8. TERMINACIÓN
+Si se incumple alguna de estas condiciones, los permisos de esta licencia terminan
+automáticamente para quien las incumpla.

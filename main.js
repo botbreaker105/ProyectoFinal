@@ -69,8 +69,8 @@ pintarConexion();
 initActividadUI();
 initGradebookUI();
 initNotificacionesUI();
-initAsesoresUI();
-initInformesUI();
+try { initAsesoresUI(); } catch (err) { console.error("Asesores:", err); }
+try { initInformesUI(); } catch (err) { console.error("Informes:", err); }
 
 $("#btn-login").addEventListener("click", async () => {
   const usuario = $("#login-email").value.trim();
@@ -140,7 +140,7 @@ $("#btn-back").addEventListener("click", async () => {
   show("#screen-home");
   renderPendientes().catch(() => {});
 });
-$("#btn-back-informe").addEventListener("click", () => {
+document.querySelector("#btn-back-informe")?.addEventListener("click", () => {
   show("#screen-home");
   renderPendientes().catch(() => {});
 });
@@ -152,7 +152,7 @@ $("#btn-save-all").addEventListener("click", saveTodo);
 $("#tab-crear-reporte").addEventListener("click", () => switchReporteTab("crear"));
 $("#tab-historial-reportes").addEventListener("click", () => switchReporteTab("historial"));
 $("#tab-seguimiento").addEventListener("click", () => switchReporteTab("seguimiento"));
-$("#tab-asesoria").addEventListener("click", () => switchReporteTab("asesoria"));
+document.querySelector("#tab-asesoria")?.addEventListener("click", () => switchReporteTab("asesoria"));
 $("#btn-guardar-reporte").addEventListener("click", guardarReporte);
 $("#rep-curso").addEventListener("input", (e) => cargarEstudiantesDeCurso(e.target.value));
 $("#rep-estudiante").addEventListener("input", mostrarFiliacionReporte);
