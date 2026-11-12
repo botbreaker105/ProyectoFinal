@@ -125,6 +125,18 @@ firestore.rules       Reglas de seguridad de Firestore
 
 Se puede publicar en cualquier hosting estático (por ejemplo GitHub Pages o Firebase Hosting).
 
+### Usarlo en otra institución
+
+EduGest está configurado para la Unidad Educativa Sagrado Corazón “4” y para el proyecto de Firebase de este trabajo. Quien lo quiera usar en otro colegio debe cambiar, como mínimo:
+
+1. **Firebase:** crear su propio proyecto y reemplazar `firebaseConfig` en `firebase.js`. Nunca debe conectarse al proyecto original (lo prohíbe la [licencia](LICENSE)). También puede cambiar `AUTH_DOMAIN`, el dominio interno que arma los correos de acceso.
+2. **Identidad:** reemplazar el escudo (`assets/escudo.png` y su texto alternativo en `index.html`), los íconos de `assets/`, y el nombre, descripción y colores de `manifest.json`.
+3. **Datos del colegio:** adaptar `constants.js` (materias, cursos, grupos o menciones técnicas y comisiones) a su realidad.
+4. **Service worker:** cambiar el nombre de `CACHE_VERSION` en `sw.js`.
+5. **Reglas:** publicar `firestore.rules` en su propio Firestore y crear su primera cuenta de dirección como se explica arriba.
+
+> Si publicas el repositorio, tu `firebaseConfig` queda visible. No es un secreto, pero restringe la llave de API a tu dominio y considera activar _App Check_, para que nadie use tu proyecto para crear cuentas de prueba o gastar tu cuota.
+
 ### Al actualizar la app
 
 - Sube **todos** los archivos modificados en el mismo despliegue. Si `index.html` y los `.js` quedan de versiones distintas, la app puede cargar a medias (por ejemplo, el botón de ingresar no responde).
@@ -168,6 +180,6 @@ Agradecemos a nuestros profesores, a los docentes que probaron la plataforma y a
 
 ## Licencia
 
-**Licencia de uso no comercial.** EduGest se desarrolló como trabajo final de defensa de grado y se puede usar, copiar y modificar libremente **sin fines de lucro**, manteniendo los créditos del autor. El código y su autoría pertenecen a su titular, y cualquier uso comercial requiere autorización escrita. Ver el archivo [`LICENSE`](LICENSE).
+**Licencia de uso no comercial.** EduGest se desarrolló como trabajo final de defensa de grado y se puede usar, copiar y modificar libremente **sin fines de lucro**, manteniendo los créditos del autor. El código y su autoría pertenecen a su titular, y cualquier uso comercial requiere autorización escrita. La licencia cubre el código, no el nombre ni el escudo de la unidad educativa ni el proyecto de Firebase original. Ver el archivo [`LICENSE`](LICENSE).
 
 © 2026 Yuuta Shoji.
